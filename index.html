@@ -1,591 +1,714 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Essenza DiChef - Utensílios de Cozinha Premium</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-body { font-family: 'Plus Jakarta Sans', sans-serif; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essenza DiChef | Utensílios e Utilidades Domésticas de Alto Padrão</title>
+    <!-- Tailwind CSS para Estilização Moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#111827',
+                            gold: '#D97706',
+                            light: '#F9FAFB'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen relative pb-16 sm:pb-0"> 
-
-<!-- FAIXA SUPERIOR DE OFERTA -->
-<div class="bg-black text-white text-[10px] sm:text-xs font-bold py-2 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2">
-<i class="fa-solid fa-bolt text-amber-400"></i>
-<span>PROMOÇÃO DE HOJE: 40% OFF NO SITE + 5% EXTRA NO PIX • FRETE GRÁTIS • ATÉ 12X NO CARTÃO</span>
-</div> 
-
-<!-- CABEÇALHO -->
-<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100">
-<div class="max-w-7xl mx-auto px-3 py-2.5 flex items-center justify-between gap-2">
-<div onclick="showPage('home')" class="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-900 whitespace-nowrap cursor-pointer">
-Essenza <span class="text-red-500">DiChef</span>
-</div> 
-
-<!-- Busca -->
-<div class="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-2">
-<div class="relative">
-<input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Buscar panelas, facas, conjuntos..." class="w-full bg-slate-100 text-xs sm:text-sm py-2 pl-3 pr-8 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/20 border border-transparent">
-<i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-slate-400 text-xs"></i>
-</div>
-</div> 
-
-<!-- Ações do Cabeçalho -->
-<div class="flex items-center gap-2">
-<button onclick="showPage('tracking')" class="hidden sm:flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl transition text-xs font-bold text-slate-700">
-<i class="fa-solid fa-box text-slate-500"></i> Rastrear Pedido
-</button>
-<button onclick="showPage('cart')" class="relative flex items-center gap-1.5 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition shrink-0 border border-red-100">
-<div class="relative">
-<i class="fa-solid fa-cart-shopping text-red-600 text-base sm:text-lg"></i>
-<span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
-</div>
-<span class="hidden sm:inline text-xs font-bold text-slate-800">Meu Carrinho</span>
-</button>
-</div>
-</div>
-</header> 
-
-<!-- NOTIFICAÇÃO TOAST -->
-<div id="toast" class="fixed bottom-20 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-<i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-<div class="text-xs">
-<p class="font-bold">Item adicionado com sucesso!</p>
-<p class="text-slate-400 text-[11px]">Navegue mais ou vá para o checkout.</p>
-</div>
-</div> 
-
-<!-- MODAL DE DETALHES DO PRODUTO -->
-<div id="product-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-<div class="bg-white rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl overflow-y-auto max-h-[90vh] border border-slate-100">
-<button onclick="closeProductModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 transition z-10">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="modal-content"></div>
-</div>
-</div> 
-
-<!-- MODAL DE PIX / PIX PARCELADO GERADO -->
-<div id="pix-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-<div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center relative shadow-2xl border border-slate-100">
-<button onclick="closePixModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 transition">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-<i class="fa-brands fa-pix"></i>
-</div>
-<h3 id="pix-modal-title" class="font-extrabold text-slate-900 text-base mb-1">Pedido Gerado com Sucesso!</h3>
-<p id="pix-modal-desc" class="text-xs text-slate-500 mb-4">Escaneie o QR Code abaixo no app do seu banco ou copie a chave Pix.</p> 
-
-<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block mb-4">
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=00020126580014br.gov.bcb.pix0136essenzadichef-pagamento-simulado" alt="QR Code PIX" class="w-40 h-40 mx-auto">
-</div> 
-
-<div class="space-y-2">
-<input type="text" readonly value="00020126580014br.gov.bcb.pix0136essenzadichef-pagamento-simulado" class="w-full bg-slate-100 text-[10px] p-2.5 rounded-xl border border-slate-200 text-slate-600 font-mono text-center select-all">
-<button onclick="copyPixCode()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
-<i class="fa-regular fa-copy"></i> Copiar Código Pix
-</button>
-</div>
-</div>
-</div> 
-
-<!-- BOTÃO WHATSAPP FLUTUANTE -->
-<a href="https://wa.me/5511999999999" target="_blank" class="fixed bottom-5 right-5 z-40 bg-emerald-500 hover:bg-emerald-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition">
-<i class="fa-brands fa-whatsapp text-2xl"></i>
-</a> 
-
-<!-- CONTEÚDO PRINCIPAL -->
-<main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6 flex-1 w-full"> 
-
-<!-- ================= TELA: HOME ================= -->
-<div id="page-home" class="space-y-8">
-<div class="bg-[#0e2118] text-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-lg">
-<div class="max-w-md relative z-10">
-<span class="inline-block bg-amber-400 text-slate-950 text-[10px] sm:text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-3">
-PROMOÇÃO ESPECIAL DA SEMANA
-</span>
-<h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-2 sm:mb-3">
-Tudo com 40% OFF + 5% Extra no Pix
-</h1>
-<p class="text-slate-300 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed">
-Catálogo renovado com 16 itens exclusivos para sua cozinha. Cupom <strong>PRIMEIRACOMPRA</strong> para +7% OFF extra!
-</p>
-<a href="#produtos-sec" class="inline-block bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3 rounded-full text-xs sm:text-sm transition shadow-md">
-APROVEITAR PROMOÇÃO
-</a>
-</div>
-</div> 
-
-<!-- DIFERENCIAIS -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-<div class="p-2"><i class="fa-solid fa-tag text-red-500 text-xl mb-1"></i><h4 class="font-bold text-xs text-slate-900">40% OFF no Site</h4><p class="text-[10px] text-slate-500">Desconto já aplicado</p></div>
-<div class="p-2"><i class="fa-brands fa-pix text-emerald-500 text-xl mb-1"></i><h4 class="font-bold text-xs text-slate-900">+5% Extra no Pix</h4><p class="text-[10px] text-slate-500">Desconto cumulativo</p></div>
-<div class="p-2"><i class="fa-solid fa-truck-fast text-red-500 text-xl mb-1"></i><h4 class="font-bold text-xs text-slate-900">Frete Grátis Brasil</h4><p class="text-[10px] text-slate-500">Sem valor mínimo</p></div>
-<div class="p-2"><i class="fa-solid fa-shield-halved text-red-500 text-xl mb-1"></i><h4 class="font-bold text-xs text-slate-900">Garantia de 90 Dias</h4><p class="text-[10px] text-slate-500">Satisfação garantida</p></div>
-</div> 
-
-<!-- FILTROS DE CATEGORIA E CABEÇALHO DA SEÇÃO -->
-<div class="space-y-4">
-<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-<button onclick="filterCategory('todos', event)" class="cat-btn active bg-[#1b3026] text-white text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap shadow-sm">Todos os Produtos (16)</button>
-<button onclick="filterCategory('panelas', event)" class="cat-btn bg-white border border-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap">Panelas & Frigideiras (8)</button>
-<button onclick="filterCategory('utensilios', event)" class="cat-btn bg-white border border-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap">Utensílios & Facas (8)</button>
-</div> 
-
-<div id="produtos-sec" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-<div>
-<h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Nossas Coleções</h2>
-<span class="text-xs text-slate-400 font-medium" id="item-count">Carregando...</span>
-</div> 
-
-<!-- SELETOR DE ORDENAÇÃO -->
-<div class="flex items-center gap-2 self-end sm:self-auto">
-<label for="sort-select" class="text-xs text-slate-500 font-semibold whitespace-nowrap"><i class="fa-solid fa-arrow-down-short-wide text-slate-400 mr-1"></i>Ordenar por:</label>
-<select id="sort-select" onchange="sortProducts()" class="bg-white border border-slate-200 text-slate-700 font-semibold text-xs py-2 px-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 shadow-sm cursor-pointer">
-<option value="default">Recomendados</option>
-<option value="price-asc">Menor Preço</option>
-<option value="price-desc">Maior Preço</option>
-<option value="rating-desc">Melhores Avaliações</option>
-</select>
-</div>
-</div>
-</div> 
-
-<!-- GRADE DE PRODUTOS -->
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6" id="product-grid"></div> 
-
-<!-- CONTROLES DE PAGINAÇÃO -->
-<div class="flex items-center justify-center gap-2 pt-6" id="pagination-container"></div> 
-
-<!-- SEÇÃO DE AVALIAÇÕES DOS CLIENTES -->
-<section class="mt-12 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm">
-<div class="text-center max-w-xl mx-auto mb-8">
-<span class="text-amber-500 text-xs font-extrabold uppercase tracking-widest"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
-<h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">Quem compra, recomenda</h2>
-<p class="text-xs text-slate-500 mt-1">Veja o que nossos clientes estão achando das peças da Essenza DiChef</p>
-</div> 
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex flex-col justify-between">
-<div>
-<div class="flex items-center gap-1 text-amber-400 text-xs mb-3">
-<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-</div>
-<p class="text-xs text-slate-600 leading-relaxed italic mb-4">"O jogo de panelas superou muito minhas expectativas! Realmente não gruda nada e o acabamento é lindíssimo, bem pesado e resistente."</p>
-</div>
-<div class="flex items-center gap-3 pt-3 border-t border-slate-200/60">
-<div class="w-8 h-8 rounded-full bg-slate-300 font-bold text-slate-700 flex items-center justify-center text-xs">MC</div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">Mariana Costa</h4>
-<span class="text-[10px] text-emerald-600 font-medium"><i class="fa-solid fa-circle-check"></i> Compra Verificada</span>
-</div>
-</div>
-</div> 
-
-<div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex flex-col justify-between">
-<div>
-<div class="flex items-center gap-1 text-amber-400 text-xs mb-3">
-<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-</div>
-<p class="text-xs text-slate-600 leading-relaxed italic mb-4">"Comprei o set de facas de aço alemão e o filé de corte é surreal. Chegou em 3 dias com embalagem super protegida!"</p>
-</div>
-<div class="flex items-center gap-3 pt-3 border-t border-slate-200/60">
-<div class="w-8 h-8 rounded-full bg-slate-300 font-bold text-slate-700 flex items-center justify-center text-xs">RF</div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">Rodrigo F.</h4>
-<span class="text-[10px] text-emerald-600 font-medium"><i class="fa-solid fa-circle-check"></i> Compra Verificada</span>
-</div>
-</div>
-</div> 
-
-<div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex flex-col justify-between">
-<div>
-<div class="flex items-center gap-1 text-amber-400 text-xs mb-3">
-<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-</div>
-<p class="text-xs text-slate-600 leading-relaxed italic mb-4">"Aproveitei a promoção de 40% OFF e o desconto no Pix. A wok e os utensílios de silicone são sensacionais."</p>
-</div>
-<div class="flex items-center gap-3 pt-3 border-t border-slate-200/60">
-<div class="w-8 h-8 rounded-full bg-slate-300 font-bold text-slate-700 flex items-center justify-center text-xs">A&S</div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">Amanda S.</h4>
-<span class="text-[10px] text-emerald-600 font-medium"><i class="fa-solid fa-circle-check"></i> Compra Verificada</span>
-</div>
-</div>
-</div>
-</div>
-</section> 
-
-</div> 
-
-<!-- ================= TELA: CARRINHO E CHECKOUT ================= -->
-<div id="page-cart" class="hidden max-w-5xl mx-auto pb-12">
-<div class="bg-amber-50 border border-amber-200 text-amber-900 px-4 py-2.5 rounded-2xl mb-6 text-xs font-bold flex items-center justify-between shadow-sm">
-<span class="flex items-center gap-2"><i class="fa-solid fa-clock text-amber-600 animate-pulse"></i> Sua reserva expira em breve:</span>
-<span id="checkout-timer" class="bg-amber-200 px-2.5 py-1 rounded-lg font-mono text-amber-950">10:00</span>
-</div> 
-
-<div class="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
-<h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Seu Carrinho e Checkout</h1>
-<button onclick="showPage('home')" class="text-xs font-bold text-blue-600 hover:underline">
-<i class="fa-solid fa-arrow-left mr-1"></i> Continuar Comprando
-</button>
-</div> 
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div class="lg:col-span-1 space-y-4">
-<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-<h2 class="font-extrabold text-sm text-slate-900 mb-4 flex items-center justify-between">
-<span>Itens Selecionados</span>
-<span id="cart-item-badge" class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">0 itens</span>
-</h2> 
-
-<div id="cart-page-items" class="divide-y divide-slate-100 max-h-[350px] overflow-y-auto pr-1 space-y-4"></div> 
-
-<div id="savings-banner" class="bg-emerald-50 border border-emerald-100 text-emerald-800 p-2.5 rounded-xl text-[11px] font-bold flex items-center gap-2 mt-4 hidden">
-<i class="fa-solid fa-piggy-bank text-emerald-600 text-base"></i>
-<span>Você está economizando <strong id="savings-amount" class="text-emerald-700">R$` 0,00</strong>!</span>
-</div> 
-
-<div class="border-t border-slate-100 pt-4 mt-4 space-y-1.5 text-xs">
-<div class="flex justify-between text-slate-500">
-<span>Desconto do Site:</span>
-<span class="text-red-500 font-bold uppercase">40% OFF</span>
-</div> 
-
-<div id="coupon-discount-row" class="flex justify-between text-emerald-600 font-bold hidden">
-<span>Cupom (<span id="applied-coupon-code"></span>):</span>
-<span id="coupon-discount-val">- R`$ 0,00</span>
-</div> 
-
-<div class="flex justify-between text-slate-500">
-<span>Frete:</span>
-<span class="text-emerald-600 font-bold uppercase">Grátis</span>
-</div> 
-
-<div id="pix-discount-row" class="flex justify-between text-emerald-600 font-bold hidden">
-<span>Desconto Pix (5% extra):</span>
-<span id="pix-discount-val">- R$` 0,00</span>
-</div> 
-
-<div class="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t">
-<span>Total a Pagar:</span>
-<span id="cart-total-val">R`$ 0,00</span>
-</div>
-</div>
-</div> 
-
-<!-- FORMULÁRIO DE CHECKOUT -->
-<div class="lg:col-span-2 space-y-4">
-<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-<form id="checkout-form" class="space-y-3" onsubmit="event.preventDefault(); checkout();">
-<input type="text" id="cust-name" placeholder="Nome completo" required class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:border-slate-400 placeholder:text-slate-400"> 
-
-<div>
-<input type="email" id="cust-email" placeholder="E-mail para confirmação" required onblur="validateEmail()" class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:border-slate-400 placeholder:text-slate-400">
-<span id="email-error" class="text-[10px] text-red-500 font-bold hidden mt-0.5 block">Insira um e-mail válido.</span>
-</div> 
-
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-<input type="text" id="cust-cpf" placeholder="CPF (000.000.000-00)" maxlength="14" oninput="maskCPF(this)" required class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:border-slate-400 placeholder:text-slate-400"> 
-
-<div class="flex border border-slate-200 rounded-xl overflow-hidden">
-<span class="px-3 py-3 bg-white border-r border-slate-200 text-xs text-slate-600 flex items-center gap-1 font-medium">🇧🇷 +55</span>
-<input type="tel" id="cust-phone" placeholder="Telefone (00) 00000-0000" maxlength="15" oninput="maskPhone(this)" required class="w-full px-3 py-3 text-sm bg-white focus:outline-none placeholder:text-slate-400">
-</div>
-</div> 
-
-<div class="border-t border-slate-100 pt-3 space-y-3">
-<label class="text-[11px] font-bold text-slate-700 block">Endereço de Entrega</label>
-<div class="grid grid-cols-3 gap-2">
-<input type="text" id="cust-cep" placeholder="CEP (00000-000)" maxlength="9" oninput="maskCEP(this)" onblur="searchCEP()" required class="col-span-2 px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:border-slate-400 placeholder:text-slate-400">
-<button type="button" onclick="searchCEP()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">Buscar CEP</button>
-</div>
-<input type="text" id="cust-street" placeholder="Rua / Avenida" required class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-<div class="grid grid-cols-2 gap-2">
-<input type="text" id="cust-number" placeholder="Número" required class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-<input type="text" id="cust-bairro" placeholder="Bairro" required class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-</div>
-</div> 
-
-<div class="pt-2 pb-1">
-<label class="text-[11px] font-bold text-slate-700 mb-1 block">Cupom de Desconto</label>
-<div class="flex gap-2">
-<input type="text" id="coupon-input" placeholder="Ex: PRIMEIRACOMPRA" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs bg-white uppercase font-bold focus:outline-none">
-<button type="button" onclick="applyCoupon()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shrink-0">Aplicar</button>
-</div>
-<p id="coupon-msg" class="text-[10px] font-medium mt-1 hidden"></p>
-</div> 
-
-<div class="space-y-2 pt-2 border-t border-slate-100">
-<label class="text-[11px] font-bold text-slate-700 mb-1 block">Forma de Pagamento</label>
-<div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="payment-options">
-<button type="button" onclick="selectPayment('cartao')" id="btn-cartao" class="pay-btn active relative border-2 border-blue-500 bg-white p-3 rounded-xl font-medium text-xs text-blue-600 flex items-center justify-center gap-2 shadow-sm">
-<i class="fa-regular fa-credit-card"></i> Cartão
-</button>
-<button type="button" onclick="selectPayment('pix')" id="btn-pix" class="pay-btn border border-slate-200 bg-white p-3 rounded-xl font-medium text-xs text-slate-700 flex items-center justify-center gap-2">
-<i class="fa-brands fa-pix text-slate-900"></i> Pix (-5% OFF)
-</button>
-<button type="button" onclick="selectPayment('pix-parcelado')" id="btn-pix-parcelado" class="pay-btn border border-slate-200 bg-white p-3 rounded-xl font-medium text-xs text-slate-700 flex items-center justify-center gap-2">
-<i class="fa-solid fa-layer-group text-emerald-600"></i> Pix Parcelado
-</button>
-<button type="button" onclick="selectPayment('boleto')" id="btn-boleto" class="pay-btn border border-slate-200 bg-white p-3 rounded-xl font-medium text-xs text-slate-700 flex items-center justify-center gap-2">
-<i class="fa-solid fa-barcode"></i> Boleto
-</button>
-<button type="button" onclick="selectPayment('apple-pay')" id="btn-apple-pay" class="pay-btn border border-slate-200 bg-white p-3 rounded-xl font-medium text-xs text-slate-700 flex items-center justify-center gap-2">
-<i class="fa-brands fa-apple text-base"></i> Apple Pay
-</button>
-<button type="button" onclick="selectPayment('google-pay')" id="btn-google-pay" class="pay-btn border border-slate-200 bg-white p-3 rounded-xl font-medium text-xs text-slate-700 flex items-center justify-center gap-2">
-<i class="fa-brands fa-google-pay text-base"></i> Google Pay
-</button>
-</div>
-</div> 
-
-<div id="card-fields" class="space-y-3 pt-3">
-<input type="text" id="card-number" maxlength="19" oninput="maskCardNumber(this)" placeholder="Número do cartão" class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-<div class="grid grid-cols-2 gap-2">
-<select id="card-month" class="px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white text-slate-700 focus:outline-none">
-<option value="" disabled selected>Mês</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option>
-</select>
-<select id="card-year" class="px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white text-slate-700 focus:outline-none">
-<option value="" disabled selected>Ano</option><option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option>
-</select>
-</div>
-<input type="text" id="card-cvv" placeholder="CVV" maxlength="4" oninput="this.value = this.value.replace(/\D/g, '')" class="w-full px-3.5 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-</div> 
-
-<button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold transition shadow-md flex items-center justify-center gap-2 text-sm mt-4">
-<i class="fa-solid fa-lock text-xs"></i> Finalizar Compra Segura
-</button>
-</form>
-</div>
-</div> 
-
-</div>
-</div> 
-
-<!-- ================= TELA: RASTREAMENTO E PÓS-VENDA ================= -->
-<div id="page-tracking" class="hidden max-w-3xl mx-auto pb-12 space-y-6">
-<div class="flex items-center justify-between border-b border-slate-200 pb-4">
-<h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Rastreamento de Pedido</h1>
-<button onclick="showPage('home')" class="text-xs font-bold text-blue-600 hover:underline">
-<i class="fa-solid fa-arrow-left mr-1"></i> Voltar à Loja
-</button>
-</div> 
-
-<div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-<p class="text-xs text-slate-500">Digite seu CPF ou número do pedido para acompanhar as etapas automatizadas do seu envio:</p>
-<div class="flex gap-2">
-<input type="text" id="track-input" placeholder="Ex: PED-98241 ou seu CPF" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none">
-<button onclick="searchTracking()" class="bg-[#1b3026] hover:bg-black text-white px-5 py-3 rounded-xl font-bold text-xs transition shrink-0">Buscar</button>
-</div>
-</div> 
-
-<div id="tracking-result" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6 hidden">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-2">
-<div>
-<span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded uppercase">Status Automático</span>
-<h3 id="track-order-id" class="font-extrabold text-base text-slate-900 mt-1">Pedido #--</h3>
-</div>
-<div class="text-right">
-<span class="text-xs text-slate-400 block">Código de Rastreio (Enviado por E-mail/WhatsApp):</span>
-<span id="track-code" class="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg">BR982415300X</span>
-</div>
-</div> 
-
-<!-- LINHA DO TEMPO DO PÓS-VENDA -->
-<div class="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-200">
-<div class="flex items-start gap-4 relative">
-<div id="step-1-icon" class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 z-10"><i class="fa-solid fa-check"></i></div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">1. Pagamento Aprovado</h4>
-<p class="text-[11px] text-slate-500">E-mail de confirmação disparado automaticamente via Asaas/Gateway.</p>
-</div>
-</div> 
-
-<div class="flex items-start gap-4 relative">
-<div id="step-2-icon" class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 z-10"><i class="fa-solid fa-check"></i></div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">2. Separado no Centro de Distribuição</h4>
-<p class="text-[11px] text-slate-500">Sua peça passou pelo controle de qualidade e foi embalada com proteção reforçada.</p>
-</div>
-</div> 
-
-<div class="flex items-start gap-4 relative">
-<div id="step-3-icon" class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 z-10"><i class="fa-solid fa-truck-fast text-xs"></i></div>
-<div>
-<h4 class="font-bold text-xs text-slate-900">3. Em Trânsito para o Endereço</h4>
-<p class="text-[11px] text-slate-500">Objeto despachado. Notificação de rastreio enviada via WhatsApp e E-mail.</p>
-</div>
-</div> 
-
-<div class="flex items-start gap-4 relative">
-<div id="step-4-icon" class="w-7 h-7 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0 z-10"><i class="fa-solid fa-house"></i></div>
-<div>
-<h4 class="font-bold text-xs text-slate-400" id="step-4-title">4. Entrega Realizada</h4>
-<p class="text-[11px] text-slate-400" id="step-4-desc">Previsão de entrega em até 3 dias úteis.</p>
-</div>
-</div>
-</div>
-</div>
-</div> 
-
-</main> 
-
-<!-- RODAPÉ -->
-<footer class="bg-slate-900 text-slate-300 text-xs mt-16 pt-12 pb-8 border-t border-slate-800">
-<div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-<div class="space-y-3">
-<div class="text-xl font-extrabold tracking-tight text-white">
-Essenza <span class="text-red-500">DiChef</span>
-</div>
-<p class="text-slate-400 text-xs leading-relaxed">
-Design elegante e performance profissional para transformar sua cozinha. Peças exclusivas com acabamento de alta qualidade.
-</p>
-<div class="flex items-center gap-3 pt-2 text-base text-slate-400">
-<a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
-<a href="#" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
-<a href="#" class="hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
-<a href="#" class="hover:text-white transition"><i class="fa-brands fa-pinterest"></i></a>
-</div>
-</div> 
-
-<div class="space-y-2">
-<h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Atendimento</h4>
-<ul class="space-y-2 text-slate-400">
-<li><button onclick="showPage('tracking')" class="hover:text-white transition text-left">Rastrear Pedido</button></li>
-<li><a href="#" class="hover:text-white transition">Trocas e Devoluções</a></li>
-<li><a href="#" class="hover:text-white transition">Política de Frete</a></li>
-<li><a href="#" class="hover:text-white transition">Garantia e Qualidade</a></li>
-<li><a href="#" class="hover:text-white transition">Central de Ajuda (FAQ)</a></li>
-</ul>
-</div> 
-
-<div class="space-y-2">
-<h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Institucional</h4>
-<ul class="space-y-2 text-slate-400">
-<li><a href="#" class="hover:text-white transition">Sobre a Essenza DiChef</a></li>
-<li><a href="#" class="hover:text-white transition">Termos de Uso</a></li>
-<li><a href="#" class="hover:text-white transition">Política de Privacidade (LGPD)</a></li>
-<li><a href="#" class="hover:text-white transition">Trabalhe Conosco</a></li>
-</ul>
-</div> 
-
-<div class="space-y-3">
-<h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Pagamento & Segurança</h4>
-<div class="flex flex-wrap gap-2 text-xl text-slate-400">
-<i class="fa-brands fa-cc-visa hover:text-white"></i>
-<i class="fa-brands fa-cc-mastercard hover:text-white"></i>
-<i class="fa-brands fa-pix hover:text-emerald-400"></i>
-<i class="fa-brands fa-apple hover:text-white"></i>
-<i class="fa-brands fa-google-pay hover:text-white"></i>
-<i class="fa-solid fa-barcode hover:text-white"></i>
-</div>
-<div class="pt-2">
-<p class="text-[11px] text-slate-400 font-semibold mb-1"><i class="fa-solid fa-lock text-emerald-400 mr-1"></i> Compra 100% Criptografada</p>
-<p class="text-[10px] text-slate-500">Seus dados estão protegidos sob certificado de segurança SSL.</p>
-</div>
-</div>
-</div> 
-
-<div class="max-w-7xl mx-auto px-4 border-t border-slate-800 pt-6 text-center text-[11px] text-slate-500 space-y-1">
-<p>© 2026 Essenza DiChef Comércio Eletrônico LTDA. Todos os direitos reservados.</p>
-<p>CNPJ: 00.000.000/0001-00 • Atendimento: suporte@essenzadichef.com.br</p>
-</div>
-</footer> 
-
-<!-- SCRIPT DE NAVEGAÇÃO, ORDENAÇÃO, PERSISTÊNCIA E PÓS-VENDA -->
-<script>
-// CATÁLOGO EXPANDIDO COM 16 PRODUTOS
-const rawProducts = [
-{ id: 1, name: "Jogo de Panelas Cerâmica Premium 5 Pçs", category: "panelas", originalPrice: 504.00, badge: "40% OFF", rating: 4.9, material: "Cerâmica Antiaderente Titanium", dimensions: "Ø 18cm, 20cm, 22cm, 24cm + Frigideira 24cm", desc: "Jogo de panelas de alta durabilidade com revestimento cerâmico triplo. Não libera toxinas e reduz o uso de óleo.", img: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80" },
-{ id: 2, name: "Frigideira Antiaderente Grill 28cm", category: "panelas", originalPrice: 147.00, badge: "40% OFF", rating: 4.8, material: "Alumínio Injetado 4.5mm", dimensions: "28cm x 28cm x 4.5cm", desc: "Perfeita para grelhar carnes, peixes e legumes sem grudar. Ranhuras que escorrem o excesso de gordura.", img: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=600&q=80" },
-{ id: 3, name: "Caçarola de Alumínio Fundido 24cm", category: "panelas", originalPrice: 199.50, badge: "40% OFF", rating: 4.7, material: "Alumínio Fundido com Tampa de Vidro", dimensions: "Ø 24cm - Capacidade: 4.2 Litros", desc: "Massa espessa para retenção ideal do calor. Tampa com saída de vapor para cozimentos lentos e ensopados.", img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
-{ id: 4, name: "Wok Antiaderente com Tampa de Vidro 32cm", category: "panelas", originalPrice: 220.50, badge: "40% OFF", rating: 4.9, material: "Alumínio Reforçado e Alças de Silicone", dimensions: "Ø 32cm - Capacidade: 5.5 Litros", desc: "Formato côncavo perfeito para saltear vegetais, carnes e pratos asiáticos com distribuição homogênea do calor.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" },
-{ id: 5, name: "Panela de Pressão Inox 6 Litros", category: "panelas", originalPrice: 315.00, badge: "40% OFF", rating: 5.0, material: "Aço Inoxidável 18/10", dimensions: "Capacidade: 6.0 Litros", desc: "Sistema de tripla segurança com fechamento externo, fundo triplo e indicador de pressão inteligente.", img: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80" },
-{ id: 6, name: "Frigideira Dupla para Omelete e Panquecas", category: "panelas", originalPrice: 136.50, badge: "40% OFF", rating: 4.6, material: "Alumínio com Cerâmica Marble", dimensions: "Ø 20cm", desc: "Encaixe perfeito para virar omeletes, tapiocas e panquecas com total segurança e sem sujeira no fogão.", img: "https://images.unsplash.com/photo-1527156231393-7023794f363c?auto=format&fit=crop&w=600&q=80" },
-{ id: 7, name: "Jogo de Assadeiras Antiaderentes (3 Pçs)", category: "panelas", originalPrice: 189.00, badge: "40% OFF", rating: 4.8, material: "Aço Carbono com Revestimento Granito", dimensions: "P, M e G (Até 38cm)", desc: "Conjunto versátil para assar bolos, carnes e vegetais. Resistente a altas temperaturas e fácil de limpar.", img: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=80" },
-{ id: 8, name: "Caldeirão Cerâmico Sopas e Molhos 26cm", category: "panelas", originalPrice: 241.50, badge: "40% OFF", rating: 4.9, material: "Cerâmica Refratária Atóxica", dimensions: "Ø 26cm - Capacidade: 6.5 Litros", desc: "Conserva a temperatura do alimento por muito mais tempo. Ideal para feijoadas, caldos e cozidos pesados.", img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" },
-{ id: 9, name: 'Faca Chef Aço Alemão 8"', category: "utensilios", originalPrice: 173.25, badge: "40% OFF", rating: 5.0, material: "Aço Inox Forjado X50CrMoV15", dimensions: "Lâmina: 20cm (8 polegadas)", desc: "Corte preciso de altíssima afiação e equilíbrio ergonômico com empunhadura em resina densa.", img: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80" },
-{ id: 10, name: "Set de Facas Profissionais 6 Pçs com Cepo", category: "utensilios", originalPrice: 367.50, badge: "40% OFF", rating: 4.9, material: "Aço Inox de Alto Carbono + Cepo em Madeira", dimensions: "Contém 5 Facas + 1 Cepo Organizador", desc: "Kit completo com Faca do Chef, Faca de Pão, Faca de Carne, Utilitária e de Legumes. Acompanha bloco de madeira.", img: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80" },
-{ id: 11, name: "Tábua de Corte Teça Aço & Madeira Teca", category: "utensilios", originalPrice: 126.00, badge: "40% OFF", rating: 4.8, material: "Madeira Teca de Reflorestamento e Alça Inox", dimensions: "40cm x 30cm x 3cm", desc: "Tratamento natural antibacteriano com canaleta para reter sulcos de carnes. Alta durabilidade para suas facas.", img: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=80" },
-{ id: 12, name: "Kit Utensílios de Silicone e Bamboo (8 Pçs)", category: "utensilios", originalPrice: 115.50, badge: "40% OFF", rating: 4.7, material: "Silicone Livre de BPA e Cabo em Bambu", dimensions: "8 peças variadas + Copo Suporte", desc: "Não risca o antiaderente de suas panelas. Suporta até 230°C sem deformar ou esquentar as mãos.", img: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80" },
-{ id: 13, name: "Afiador e Amolador de Facas Profissional", category: "utensilios", originalPrice: 84.00, badge: "40% OFF", rating: 4.9, material: "Tungstênio, Cerâmica e Diamantado", dimensions: "21cm x 5cm x 6cm", desc: "3 estágios de afiação: afiar, restaurar e polir. Deixa qualquer faca cega com corte afiado em poucos segundos.", img: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80" },
-{ id: 14, name: "Jogo de Mandoline e Fatiador Multiuso", category: "utensilios", originalPrice: 141.75, badge: "40% OFF", rating: 4.6, material: "Lâminas em Aço Inox + Corpo ABS", dimensions: "Incluso 6 Lâminas Intercambiáveis", desc: "Fatie, rale e corte legumes em julienne, cubos ou rodelas finas com total proteção para os dedos.", img: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=600&q=80" },
-{ id: 15, name: "Moedor de Pimenta e Sal Inox Automático", category: "utensilios", originalPrice: 94.50, badge: "40% OFF", rating: 4.8, material: "Aço Inoxidável e Engrenagem Cerâmica", dimensions: "22cm x 5cm", desc: "Acionamento por um único botão com luz LED na base. Regulagem de moagem fina ou grossa.", img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
-{ id: 16, name: "Balança Digital de Precisão para Cozinha", category: "utensilios", originalPrice: 73.50, badge: "40% OFF", rating: 4.9, material: "Vidro Temperado e Visor LCD", dimensions: "Capacidade de 1g até 10kg", desc: "Sensor de alta precisão para confeitaria e receitas exigentes. Função tara e desligamento automático.", img: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80" }
-]; 
-
-const products = rawProducts.map(p => ({ ...p, price: +(p.originalPrice * 0.60).toFixed(2) }));
-let currentProducts = [...products];
-let currentPage = 1;
-const itemsPerPage = 8;
-let selectedCategory = 'todos'; 
-
-let cart = JSON.parse(localStorage.getItem('essenza_cart')) || [];
-let selectedPaymentMethod = 'cartao';
-let couponDiscountRate = 0;
-let appliedCouponCode = ""; 
-
-function saveCart() {
-localStorage.setItem('essenza_cart', JSON.stringify(cart));
-document.getElementById('cart-count').textContent = cart.length;
-} 
-
-let timeLeft = 600;
-setInterval(() => {
-if(timeLeft > 0) {
-timeLeft--;
-const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-const sec = String(timeLeft % 60).padStart(2, '0');
-document.getElementById('checkout-timer').textContent = ${min}:${sec};
-}
-}, 1000); 
-
-function showPage(pageId) {
-document.getElementById('page-home').classList.add('hidden');
-document.getElementById('page-cart').classList.add('hidden');
-document.getElementById('page-tracking').classList.add('hidden'); 
-
-if(pageId === 'home') document.getElementById('page-home').classList.remove('hidden');
-if(pageId === 'cart') { document.getElementById('page-cart').classList.remove('hidden'); renderCartPage(); }
-if(pageId === 'tracking') document.getElementById('page-tracking').classList.remove('hidden'); 
-
-window.scrollTo({ top: 0, behavior: 'smooth' });
-} 
-
-function renderProducts() {
-const grid = document.getElementById('product-grid');
-const totalItems = currentProducts.length;
-document.getElementById('item-count').textContent = ${totalItems} produtos ao todo`; 
-
-if(totalItems === 0) {
-grid.innerHTML = <div class="col-span-full text-center py-12 text-xs text-slate-400"&gt;Nenhum produto encontrado.&lt;/div>;
-document.getElementById('pagination-container').innerHTML = '';
-return;
-} 
-
-const totalPages = Math.ceil(totalItems / itemsPerPage);
-if(currentPage > totalPages) currentPage = 1; 
-
-const startIndex = (currentPage - 1) * itemsPerPage;
-const paginatedProducts = currentProducts.slice(startIndex, startIndex + itemsPerPage); 
-
-grid.innerHTML = paginatedProducts.map(p => &lt;div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-3.5 flex flex-col justify-between relative group"&gt; &lt;span class="absolute top-5 left-5 z-10 bg-red-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider"&gt;${p.badge}</span>
-<div>
-<div onclick="openProductModal({p.img}" alt="{p.rating})</span>
-</div>
-<h3 onclick="openProductModal({p.name}</h3>
-</div>
-<div class="mt-3 pt-2.5 border-t border-slate-50">
-<div class="text-[11px] text-slate-400 line-through">De Rlatex
-
-
-{p.originalPrice.toFixed(2).replace('.', ',')
+<body class="bg-brand-light text-brand-dark font-sans antialiased selection:bg-brand-gold selection:text-white">
+
+    <!-- Topo Promocional -->
+    <div class="bg-brand-dark text-white text-xs sm:text-sm py-2 px-4 text-center font-medium tracking-wide">
+        🔥 Frete Grátis para todo o Brasil em compras acima de R$ 299 | Use o cupom <span class="text-amber-400 font-bold">CHEF10</span> para 10% OFF
+    </div>
+
+    <!-- Cabeçalho Principal -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logotipo -->
+            <div class="flex items-center gap-3">
+                <a href="#" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 rounded-full bg-brand-dark flex items-center justify-center text-amber-400 font-serif text-xl shadow-md group-hover:scale-105 transition">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-brand-dark block leading-none">Essenza</span>
+                        <span class="text-xs uppercase tracking-widest text-brand-gold font-semibold">DiChef</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Barra de Busca Central -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Busque por panelas, facas, panelas de pressão..." 
+                        class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-brand-gold focus:bg-white transition shadow-inner">
+                </div>
+            </div>
+
+            <!-- Ações do Cabeçalho -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <button onclick="openTrackerModal()" class="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-brand-gold transition">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>Rastrear Pedido</span>
+                </button>
+                <button onclick="toggleCart()" class="relative p-2.5 rounded-full bg-gray-50 hover:bg-brand-gold hover:text-white transition text-gray-700 shadow-sm">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Busca mobile visível apenas em telas pequenas -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="searchInputMobile" placeholder="Busque por utensílios..." 
+                    class="w-full pl-11 pr-4.5 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-brand-gold">
+            </div>
+        </div>
+    </header>
+
+    <!-- Destaque Principal (Hero) -->
+    <section class="relative bg-brand-dark text-white overflow-hidden py-16 sm:py-24">
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#D97706_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-center lg:text-left">
+                <span class="inline-block bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                    Alta Performance Culinária
+                </span>
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                    Transforme sua <span class="text-amber-400 underline decoration-amber-500/40">Cozinha</span> em um Atelier
+                </h1>
+                <p class="text-gray-300 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
+                    Utensílios de alto padrão, panelas cerâmicas avançadas e facas de alta precisão projetadas para durabilidade e sofisticação incomparáveis.result_text].
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+                    <a href="#catalogo" class="bg-brand-gold hover:bg-amber-600 text-white font-semibold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 text-center">
+                        Explorar Catálogo
+                    </a>
+                    <button onclick="openTrackerModal()" class="border border-gray-600 hover:border-amber-400 text-gray-300 hover:text-white px-8 py-3.5 rounded-full transition text-center font-medium">
+                        Rastrear Pedido
+                    </button>
+                </div>
+            </div>
+            <div class="relative flex justify-center">
+                <div class="w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-gradient-to-tr from-brand-gold/20 to-amber-400/40 absolute blur-3xl -z-10"></div>
+                <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800" alt="Cozinha Gourmet" class="rounded-2xl shadow-2xl border border-white/15 object-cover w-full max-w-md h-80 sm:h-96">
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção do Catálogo -->
+    <main id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+            <div>
+                <span class="text-brand-gold text-xs font-bold uppercase tracking-widest block mb-1">Coleção Exclusiva</span>
+                <h2 class="font-serif text-3xl font-bold text-brand-dark">Nossos Produtos</h2>
+            </div>
+            <!-- Filtros por Categoria -->
+            <div id="categoryFilters" class="flex flex-wrap gap-2">
+                <button onclick="filterCategory('todos')" class="category-btn active px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-dark text-white shadow-sm">
+                    Todos
+                </button>
+                <button onclick="filterCategory('Panelas')" class="category-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-gray-600 border border-gray-200 hover:border-brand-gold">
+                    Panelas
+                </button>
+                <button onclick="filterCategory('Facas')" class="category-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-gray-600 border border-gray-200 hover:border-brand-gold">
+                    Facas
+                </button>
+                <button onclick="filterCategory('Pressão')" class="category-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-gray-600 border border-gray-200 hover:border-brand-gold">
+                    Pressão
+                </button>
+                <button onclick="filterCategory('Utensílios')" class="category-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-gray-600 border border-gray-200 hover:border-brand-gold">
+                    Utensílios
+                </button>
+            </div>
+        </div>
+
+        <!-- Grade de Produtos -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <!-- Os produtos serão injetados aqui via JavaScript -->
+        </div>
+
+        <!-- Mensagem de Nenhum Produto Encontrado -->
+        <div id="noProducts" class="hidden text-center py-20">
+            <div class="text-gray-400 text-5xl mb-4"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 class="font-serif text-xl font-bold text-gray-700">Nenhum produto encontrado</h3>
+            <p class="text-gray-500 text-sm mt-1">Tente buscar por outro termo ou categoria.</p>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-brand-dark text-gray-300 pt-16 pb-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-brand-gold flex items-center justify-center text-white font-serif">
+                        <i class="fa-solid fa-utensils text-sm"></i>
+                    </div>
+                    <span class="font-serif text-xl font-bold text-white">Essenza DiChef</span>
+                </div>
+                <p class="text-sm text-gray-400">
+                    Excelência e alta performance em utensílios e utilidades domésticas para cozinheiros exigentes.result_text].
+                </p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Atendimento</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-amber-400 transition">Central de Ajuda</a></li>
+                    <li><a href="#" onclick="openTrackerModal(); return false;" class="hover:text-amber-400 transition">Rastrear Pedido</a></li>
+                    <li><a href="#" class="hover:text-amber-400 transition">Política de Trocas</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Institucional</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-amber-400 transition">Sobre a Marca</a></li>
+                    <li><a href="#" class="hover:text-amber-400 transition">Sustentabilidade</a></li>
+                    <li><a href="#" class="hover:text-amber-400 transition">Termos de Serviço</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Newsletter</h4>
+                <p class="text-sm text-gray-400 mb-3">Receba receitas exclusivas e cupons de desconto.</p>
+                <form onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');" class="flex gap-2">
+                    <input type="email" placeholder="Seu e-mail" required class="bg-gray-800 border border-gray-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand-gold flex-1">
+                    <button type="submit" class="bg-brand-gold hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Assinar</button>
+                </form>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-gray-800/60 text-center text-xs text-gray-500">
+            &copy; 2026 Essenza DiChef. Todos os direitos reservados. Plataforma de comércio eletrônico segura.
+        </div>
+    </footer>
+
+    <!-- MODAL DO CARRINHO LATERAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Cabeçalho do Carrinho -->
+                <div class="p-6 bg-brand-dark text-white flex items-center justify-between">
+                    <h3 class="font-serif text-lg font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-brand-gold"></i> Seu Carrinho (<span id="cartItemCount">0</span>)
+                    </h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white p-1 text-lg transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <!-- Lista de Itens -->
+                <div id="cartItemsList" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-gray-100">
+                    <!-- Itens inseridos via script -->
+                </div>
+                <!-- Rodapé / Resumo do Carrinho -->
+                <div class="p-6 bg-gray-50 border-t border-gray-200 space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Subtotal</span>
+                            <span id="cartSubtotal">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Frete</span>
+                            <span id="cartShipping">Calculado no checkout</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-brand-dark pt-2 border-t border-gray-200">
+                            <span>Total</span>
+                            <span id="cartTotal" class="text-brand-gold">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <button onclick="proceedToCheckout()" id="checkoutBtn" class="w-full bg-brand-gold hover:bg-amber-600 text-white font-semibold py-3 rounded-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALHES DO PRODUTO -->
+    <div id="productModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
+        <div class="bg-white rounded-2xl overflow-hidden max-w-2xl w-full relative z-10 shadow-2xl flex flex-col md:flex-row">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-20 bg-white/80 hover:bg-white w-9 h-9 rounded-full flex items-center justify-center text-gray-700 shadow transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="md:w-1/2 bg-gray-100 relative h-64 md:h-auto">
+                <img id="modalImg" src="" alt="Produto" class="w-full h-full object-cover">
+            </div>
+            <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-4">
+                <div>
+                    <span id="modalCategory" class="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-1"></span>
+                    <h3 id="modalTitle" class="font-serif text-2xl font-bold text-brand-dark mb-2"></h3>
+                    <p id="modalDesc" class="text-sm text-gray-600 leading-relaxed"></p>
+                </div>
+                <div>
+                    <div class="flex items-baseline gap-3 mb-4">
+                        <span id="modalPrice" class="text-2xl font-bold text-brand-dark"></span>
+                        <span id="modalOldPrice" class="text-sm text-gray-400 line-through"></span>
+                    </div>
+                    <button id="modalAddBtn" class="w-full bg-brand-dark hover:bg-brand-gold text-white font-semibold py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CHECKOUT / FINALIZAÇÃO -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
+        <div class="bg-white rounded-2xl overflow-hidden max-w-xl w-full relative z-10 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="p-6 bg-brand-dark text-white flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold">Finalizar Pedido</h3>
+                <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nome Completo</label>
+                        <input type="text" id="checkoutName" required class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">E-mail</label>
+                            <input type="email" id="checkoutEmail" required class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Telefone / WhatsApp</label>
+                            <input type="text" id="checkoutPhone" required placeholder="(00) 00000-0000" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-1">
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">CEP</label>
+                            <input type="text" id="checkoutCep" required placeholder="00000-000" onblur="calculateFreight(this.value)" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Endereço Completo</label>
+                            <input type="text" id="checkoutAddress" required class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Cupom de Desconto</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="checkoutCoupon" placeholder="Ex: CHEF10" class="w-full px-3.5 py-2 border border-gray-200 rounded-lg text-sm uppercase focus:outline-none focus:border-brand-gold">
+                            <button type="button" onclick="applyCoupon()" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Aplicar</button>
+                        </div>
+                        <p id="couponFeedback" class="text-xs mt-1 text-emerald-600 font-medium hidden"></p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-gray-500 block">Total a Pagar</span>
+                            <span id="finalCheckoutTotal" class="text-xl font-bold text-brand-gold">R$ 0,00</span>
+                        </div>
+                        <button type="submit" class="bg-brand-gold hover:bg-amber-600 text-white font-semibold px-8 py-3 rounded-xl shadow transition">
+                            Confirmar Pedido
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE RASTREIO -->
+    <div id="trackerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTrackerModal()"></div>
+        <div class="bg-white rounded-2xl overflow-hidden max-w-md w-full relative z-10 shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold text-brand-dark">Rastrear seu Pedido</h3>
+                <button onclick="closeTrackerModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-sm text-gray-600">Insira o número do seu pedido ou código de rastreio:</p>
+            <div class="flex gap-2">
+                <input type="text" id="trackerInput" placeholder="Ex: CHEF-8492" class="flex-1 px-3.5 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
+                <button onclick="trackOrder()" class="bg-brand-dark hover:bg-brand-gold text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Buscar</button>
+            </div>
+            <div id="trackerResult" class="hidden p-4 bg-gray-50 rounded-xl text-sm space-y-2 border border-gray-100">
+                <!-- Resultado simulado de rastreio -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DA APLICAÇÃO -->
+    <script>
+        // Banco de Dados dos Produtos da Essenza DiChef
+        const products = [
+            {
+                id: 1,
+                name: "Conjunto de Panelas Ceramic Premium 10 Peças",
+                category: "Panelas",
+                price: 899.90,
+                oldPrice: 1199.90,
+                image: "https://images.unsplash.com/photo-1584990347426-c7853cd78e9b?auto=format&fit=crop&q=80&w=600",
+                description: "Revestimento cerâmico avançado antiaderente livre de metais pesados. Distribuição de calor uniforme e cabos ergonômicos soft-touch."
+            },
+            {
+                id: 2,
+                name: "Faca Chef Profissional Aço Damasco 8\"",
+                category: "Facas",
+                price: 349.90,
+                oldPrice: 449.90,
+                image: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&q=80&w=600",
+                description: "Lâmina forjada em aço damasco com 67 camadas, oferecendo corte cirúrgico extrema precisão e cabo em resina nobre."
+            },
+            {
+                id: 3,
+                name: "Panela de Pressão Inox de Alta Performance 6L",
+                category: "Pressão",
+                price: 329.90,
+                oldPrice: 399.90,
+                image: "https://images.unsplash.com/photo-1545217986-44431e5f32d8?auto=format&fit=crop&q=80&w=600",
+                description: "Fabricada em aço inoxidável cirúrgico com fundo triplo e 5 sistemas de segurança certificados. Praticidade absoluta."
+            },
+            {
+                id: 4,
+                name: "Kit Utensílios de Cozinha em Silicone e Bambu",
+                category: "Utensílios",
+                price: 159.90,
+                oldPrice: 219.90,
+                image: "https://images.unsplash.com/photo-1590794056226-79ef3a8177e1?auto=format&fit=crop&q=80&w=600",
+                description: "Suporte elegante com 12 peças em silicone culinário resistente a altas temperaturas e cabos de bambu natural."
+            },
+            {
+                id: 5,
+                name: "Caçarola Gourmet Esmaltada 24cm",
+                category: "Panelas",
+                price: 289.90,
+                oldPrice: 359.90,
+                image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=600",
+                description: "Ideal para cozimentos longos e pães artesanais. Retém o calor de forma excelente e vai do fogão direto à mesa."
+            },
+            {
+                id: 6,
+                name: "Conjunto de Facas para Churrasco com Malha",
+                category: "Facas",
+                price: 499.90,
+                oldPrice: 599.90,
+                image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=600",
+                description: "Kit completo com faca trinchar, garfo tridente e chaira com maleta executiva em alumínio escovado."
+            },
+            {
+                id: 7,
+                name: "Panela de Pressão Elétrica Digital 5L",
+                category: "Pressão",
+                price: 479.90,
+                oldPrice: 559.90,
+                image: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&q=80&w=600",
+                description: "Painel touch com 14 programações inteligentes para carnes, sopas, feijão e sobremesas com timer programável."
+            },
+            {
+                id: 8,
+                name: "Tábua de Corte Profissional em Teca Maciça",
+                category: "Utensílios",
+                price: 139.90,
+                oldPrice: 189.90,
+                image: "https://images.unsplash.com/photo-1594834749601-5e7e01460a5b?auto=format&fit=crop&q=80&w=600",
+                description: "Madeira teca de reflorestamento com canaleta coletora de líquidos e tratamento antibacteriano natural."
+            }
+        ];
+
+        let cart = [];
+        let currentCategory = 'todos';
+        let discountPercent = 0;
+        let shippingCost = 0;
+
+        // Inicialização do Catálogo ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+
+            // Eventos de Busca
+            document.getElementById('searchInput').addEventListener('input', (e) => handleSearch(e.target.value));
+            document.getElementById('searchInputMobile').addEventListener('input', (e) => handleSearch(e.target.value));
+        });
+
+        // Renderiza os produtos na tela
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            const noProducts = document.getElementById('noProducts');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                noProducts.classList.remove('hidden');
+                return;
+            } else {
+                noProducts.classList.add('hidden');
+            }
+
+            items.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div class="relative overflow-hidden cursor-pointer" onclick="openProductModal(${prod.id})">
+                        <img src="${prod.image}" alt="${prod.name}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 left-3 bg-brand-dark/80 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">${prod.category}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1 justify-between space-y-4">
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-brand-dark line-clamp-2 cursor-pointer hover:text-brand-gold transition" onclick="openProductModal(${prod.id})">${prod.name}</h3>
+                            <p class="text-xs text-gray-500 line-clamp-2 mt-1">${prod.description}</p>
+                        </div>
+                        <div>
+                            <div class="flex items-baseline gap-2 mb-3">
+                                <span class="text-xl font-bold text-brand-dark">R$ ${prod.price.toFixed(2).replace('.', ',')}</span>
+                                <span class="text-xs text-gray-400 line-through">R$ ${prod.oldPrice.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                            <button onclick="addToCart(${prod.id})" class="w-full bg-brand-dark hover:bg-brand-gold text-white font-semibold py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filtrar por Categoria
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Atualizar estilo visual dos botões
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if(btn.textContent.trim().toLowerCase() === category.toLowerCase() || (category === 'todos' && btn.textContent.trim().toLowerCase() === 'todos')) {
+                    btn.className = "category-btn active px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-dark text-white shadow-sm";
+                } else {
+                    btn.className = "category-btn px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-gray-600 border border-gray-200 hover:border-brand-gold";
+                }
+            });
+
+            applyFilters();
+        }
+
+        // Busca de produtos
+        function handleSearch(query) {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query1 = document.getElementById('searchInput').value.toLowerCase();
+            const query2 = document.getElementById('searchInputMobile').value.toLowerCase();
+            const query = query1 || query2;
+
+            let filtered = products;
+
+            if (currentCategory !== 'todos') {
+                filtered = filtered.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
+            }
+
+            if (query.trim() !== '') {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+            }
+
+            renderProducts(filtered);
+        }
+
+        // Funções do Carrinho
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+            updateCartUI();
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            
+            // Abrir o carrinho automaticamente ao adicionar
+            document.getElementById('cartModal').classList.remove('hidden');
+        }
+
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countElem = document.getElementById('cartCount');
+            const itemCountsElem = document.getElementById('cartItemCount');
+            const listElem = document.getElementById('cartItemsList');
+            const subtotalElem = document.getElementById('cartSubtotal');
+            const totalElem = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            countElem.textContent = totalItems;
+            itemCountsElem.textContent = totalItems;
+
+            if (cart.length === 0) {
+                listElem.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm"><i class="fa-solid fa-bag-shopping text-3xl mb-2 block"></i>Seu carrinho está vazio</div>`;
+                subtotalElem.textContent = `R$ 0,00`;
+                totalElem.textContent = `R$ 0,00`;
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            listElem.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+                const div = document.createElement('div');
+                div.className = "flex items-center gap-4 pt-4";
+                div.innerHTML = `
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg border border-gray-100">
+                    <div class="flex-1">
+                        <h4 class="font-serif text-sm font-bold text-brand-dark line-clamp-1">${item.name}</h4>
+                        <span class="text-xs text-gray-500">R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+                        <div class="flex items-center gap-3 mt-1">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded bg-gray-100 text-gray-600 flex items-center justify-center text-xs hover:bg-gray-200">-</button>
+                            <span class="text-xs font-semibold">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded bg-gray-100 text-gray-600 flex items-center justify-center text-xs hover:bg-gray-200">+</button>
+                        </div>
+                    </div>
+                `;
+                listElem.appendChild(div);
+            });
+
+            const discountAmount = subtotal * discountPercent;
+            const finalTotal = subtotal - discountAmount + shippingCost;
+
+            subtotalElem.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            totalElem.textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
+        }
+
+        // Modal de Detalhes do Produto
+        function openProductModal(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('modalImg').src = prod.image;
+            document.getElementById('modalCategory').textContent = prod.category;
+            document.getElementById('modalTitle').textContent = prod.name;
+            document.getElementById('modalDesc').textContent = prod.description;
+            document.getElementById('modalPrice').textContent = `R$ ${prod.price.toFixed(2).replace('.', ',')}`;
+            document.getElementById('modalOldPrice').textContent = `R$ ${prod.oldPrice.toFixed(2).replace('.', ',')}`;
+            
+            const addBtn = document.getElementById('modalAddBtn');
+            addBtn.onclick = () => {
+                addToCart(prod.id);
+                closeProductModal();
+            };
+
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        // Fluxo de Checkout
+        function proceedToCheckout() {
+            toggleCart(); // fecha carrinho
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const finalTotal = subtotal - (subtotal * discountPercent) + shippingCost;
+            document.getElementById('finalCheckoutTotal').textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function calculateFreight(cep) {
+            const cleanCep = cep.replace(/\D/g, '');
+            if (cleanCep.length === 8) {
+                shippingCost = 25.00; // Frete fixo simulado
+                document.getElementById('cartShipping').textContent = `R$ 25,00`;
+                updateCartUI();
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const finalTotal = subtotal - (subtotal * discountPercent) + shippingCost;
+                document.getElementById('finalCheckoutTotal').textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
+            }
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('checkoutCoupon').value.trim().toUpperCase();
+            const feedback = document.getElementById('couponFeedback');
+            
+            if (code === 'CHEF10') {
+                discountPercent = 0.10;
+                feedback.textContent = "Cupom aplicado com sucesso: 10% de desconto!";
+                feedback.classList.remove('hidden');
+                updateCartUI();
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const finalTotal = subtotal - (subtotal * discountPercent) + shippingCost;
+                document.getElementById('finalCheckoutTotal').textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
+            } else {
+                feedback.textContent = "Cupom inválido ou expirado.";
+                feedback.classList.remove('hidden');
+                feedback.className = "text-xs mt-1 text-red-600 font-medium";
+            }
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('checkoutName').value;
+            alert(`Parabéns, ${name}! Seu pedido na Essenza DiChef foi realizado com sucesso. Um e-mail de confirmação e instruções de pagamento foram enviados.`);
+            cart = [];
+            discountPercent = 0;
+            shippingCost = 0;
+            closeCheckoutModal();
+            updateCartUI();
+        }
+
+        // Modal de Rastreio
+        function openTrackerModal() {
+            document.getElementById('trackerModal').classList.remove('hidden');
+        }
+
+        function closeTrackerModal() {
+            document.getElementById('trackerModal').classList.add('hidden');
+            document.getElementById('trackerResult').classList.add('hidden');
+        }
+
+        function trackOrder() {
+            const code = document.getElementById('trackerInput').value.trim();
+            const resultDiv = document.getElementById('trackerResult');
+            if (!code) {
+                alert('Insira um código de rastreio válido.');
+                return;
+            }
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `
+                <p class="font-bold text-brand-dark mb-1">Status para: ${code}</p>
+                <p class="text-amber-600 font-semibold"><i class="fa-solid fa-truck-fast"></i> Pedido em trânsito</p>
+                <p class="text-xs text-gray-500 mt-1">Previsão de entrega: 3 dias úteis. Última atualização: Centro de Distribuição Regional.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
