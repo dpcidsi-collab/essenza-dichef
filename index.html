@@ -146,7 +146,7 @@
             </div>
         </div>
 
-        <!-- Grade de Produtos configurada estritamente com 2 colunas (grid-cols-2) -->
+        <!-- Grade de Produtos em 2 colunas -->
         <div id="productGrid" class="grid grid-cols-2 gap-4 sm:gap-6">
             <!-- Os produtos serão injetados aqui via JavaScript -->
         </div>
@@ -245,36 +245,76 @@
         </div>
     </div>
 
-    <!-- MODAL DE DETALHES DO PRODUTO -->
+    <!-- MODAL DE DETALHES DO PRODUTO E AVALIAÇÕES -->
     <div id="productModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
-        <div class="bg-white rounded-2xl overflow-hidden max-w-2xl w-full relative z-10 shadow-2xl flex flex-col md:flex-row">
+        <div class="bg-white rounded-2xl overflow-hidden max-w-3xl w-full relative z-10 shadow-2xl max-h-[90vh] flex flex-col">
             <button onclick="closeProductModal()" class="absolute top-4 right-4 z-20 bg-white/80 hover:bg-white w-9 h-9 rounded-full flex items-center justify-center text-gray-700 shadow transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <div class="md:w-1/2 bg-gray-100 relative h-64 md:h-auto">
-                <img id="modalImg" src="" alt="Produto" class="w-full h-full object-cover">
-            </div>
-            <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-4">
-                <div>
-                    <span id="modalCategory" class="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-1"></span>
-                    <h3 id="modalTitle" class="font-serif text-2xl font-bold text-brand-dark mb-2"></h3>
-                    <p id="modalDesc" class="text-sm text-gray-600 leading-relaxed"></p>
-                </div>
-                <div>
-                    <div class="flex items-baseline gap-3 mb-4">
-                        <span id="modalPrice" class="text-2xl font-bold text-brand-dark"></span>
-                        <span id="modalOldPrice" class="text-sm text-gray-400 line-through"></span>
+            <div class="overflow-y-auto flex-1 p-6 sm:p-8 space-y-6">
+                <!-- Informações Principais do Produto -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="bg-gray-100 rounded-xl overflow-hidden h-64 md:h-72">
+                        <img id="modalImg" src="" alt="Produto" class="w-full h-full object-cover">
                     </div>
-                    <button id="modalAddBtn" class="w-full bg-brand-dark hover:bg-brand-gold text-white font-semibold py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho
-                    </button>
+                    <div class="space-y-3">
+                        <span id="modalCategory" class="text-xs font-bold text-brand-gold uppercase tracking-wider block"></span>
+                        <h3 id="modalTitle" class="font-serif text-2xl font-bold text-brand-dark"></h3>
+                        <div id="modalRatingHeader" class="flex items-center gap-2 text-sm text-amber-500">
+                            <!-- Estrelas inseridas via script -->
+                        </div>
+                        <p id="modalDesc" class="text-sm text-gray-600 leading-relaxed"></p>
+                        <div class="flex items-baseline gap-3 pt-2">
+                            <span id="modalPrice" class="text-2xl font-bold text-brand-dark"></span>
+                            <span id="modalOldPrice" class="text-sm text-gray-400 line-through"></span>
+                        </div>
+                        <button id="modalAddBtn" class="w-full bg-brand-dark hover:bg-brand-gold text-white font-semibold py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <!-- Seção de Avaliações dos Clientes -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-serif text-lg font-bold text-brand-dark">Avaliações de Clientes</h4>
+                        <span id="modalReviewCount" class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium"></span>
+                    </div>
+                    
+                    <!-- Lista de Comentários -->
+                    <div id="modalReviewsList" class="space-y-3">
+                        <!-- Comentários injetados via script -->
+                    </div>
+
+                    <!-- Formulário para Enviar Nova Avaliação -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 mt-6 space-y-3">
+                        <h5 class="text-xs font-bold text-brand-dark uppercase tracking-wider">Deixe sua avaliação</h5>
+                        <form onsubmit="submitReview(event)" class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="text" id="reviewerName" placeholder="Seu Nome" required class="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-gold">
+                                <select id="reviewerRating" class="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-gold">
+                                    <option value="5">⭐⭐⭐⭐⭐ (5/5) - Excelente</option>
+                                    <option value="4">⭐⭐⭐⭐ (4/5) - Muito Bom</option>
+                                    <option value="3">⭐⭐⭐ (3/5) - Bom</option>
+                                    <option value="2">⭐⭐ (2/5) - Regular</option>
+                                    <option value="1">⭐ (1/5) - Ruim</option>
+                                </select>
+                            </div>
+                            <textarea id="reviewerComment" placeholder="O que você achou deste produto?" required rows="2" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-gold"></textarea>
+                            <button type="submit" class="bg-brand-gold hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-lg text-xs transition">
+                                Enviar Avaliação
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE CHECKOUT / FINALIZAÇÃO COM SELEÇÃO DE PAGAMENTO E ENVIO DE E-MAIL -->
+    <!-- MODAL DE CHECKOUT / FINALIZAÇÃO -->
     <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
         <div class="bg-white rounded-2xl overflow-hidden max-w-xl w-full relative z-10 shadow-2xl max-h-[90vh] flex flex-col">
@@ -290,7 +330,7 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">E-mail (para recebimento da confirmação)</label>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">E-mail (para confirmação)</label>
                             <input type="email" id="checkoutEmail" required class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-gold">
                         </div>
                         <div>
@@ -403,7 +443,7 @@
 
     <!-- SCRIPT DA APLICAÇÃO -->
     <script>
-        // Banco de Dados dos Produtos da Essenza DiChef
+        // Banco de Dados dos Produtos da Essenza DiChef (com avaliações integradas)
         const products = [
             {
                 id: 1,
@@ -412,7 +452,11 @@
                 price: 899.90,
                 oldPrice: 1199.90,
                 image: "https://images.unsplash.com/photo-1584990347426-c7853cd78e9b?auto=format&fit=crop&q=80&w=600",
-                description: "Revestimento cerâmico avançado antiaderente livre de metais pesados. Distribuição de calor uniforme e cabos ergonômicos soft-touch."
+                description: "Revestimento cerâmico avançado antiaderente livre de metais pesados. Distribuição de calor uniforme e cabos ergonômicos soft-touch.",
+                reviews: [
+                    { name: "Mariana Souza", rating: 5, comment: "Simplesmente maravilhosas! Não gruda nada e são lindas na cozinha." },
+                    { name: "Carlos Eduardo", rating: 5, comment: "Excelente qualidade de acabamento, vale cada centavo." }
+                ]
             },
             {
                 id: 2,
@@ -421,7 +465,10 @@
                 price: 349.90,
                 oldPrice: 449.90,
                 image: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&q=80&w=600",
-                description: "Lâmina forjada em aço damasco com 67 camadas, oferecendo corte cirúrgico extrema precisão e cabo em resina nobre."
+                description: "Lâmina forjada em aço damasco com 67 camadas, oferecendo corte cirúrgico extrema precisão e cabo em resina nobre.",
+                reviews: [
+                    { name: "Roberto Dias", rating: 5, comment: "Corte extremamente preciso. Uma verdadeira obra de arte!" }
+                ]
             },
             {
                 id: 3,
@@ -430,7 +477,11 @@
                 price: 329.90,
                 oldPrice: 399.90,
                 image: "https://images.unsplash.com/photo-1545217986-44431e5f32d8?auto=format&fit=crop&q=80&w=600",
-                description: "Fabricada em aço inoxidável cirúrgico com fundo triplo e 5 sistemas de segurança certificados. Praticidade absoluta."
+                description: "Fabricada em aço inoxidável cirúrgico com fundo triplo e 5 sistemas de segurança certificados. Praticidade absoluta.",
+                reviews: [
+                    { name: "Juliana Mendes", rating: 4, comment: "Muito segura e bonita. Cozinha super rápido." },
+                    { name: "Marcos Vinicius", rating: 5, comment: "A melhor panela de pressão que já tive." }
+                ]
             },
             {
                 id: 4,
@@ -439,7 +490,10 @@
                 price: 159.90,
                 oldPrice: 219.90,
                 image: "https://images.unsplash.com/photo-1590794056226-79ef3a8177e1?auto=format&fit=crop&q=80&w=600",
-                description: "Suporte elegante com 12 peças em silicone culinário resistente a altas temperaturas e cabos de bambu natural."
+                description: "Suporte elegante com 12 peças em silicone culinário resistente a altas temperaturas e cabos de bambu natural.",
+                reviews: [
+                    { name: "Beatriz Lima", rating: 5, comment: "Ótimo kit, não danifica as panelas e o suporte é charmoso." }
+                ]
             },
             {
                 id: 5,
@@ -448,7 +502,10 @@
                 price: 289.90,
                 oldPrice: 359.90,
                 image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=600",
-                description: "Ideal para cozimentos longos e pães artesanais. Retém o calor de forma excelente e vai do fogão direto à mesa."
+                description: "Ideal para cozimentos longos e pães artesanais. Retém o calor de forma excelente e vai do fogão direto à mesa.",
+                reviews: [
+                    { name: "Patrícia Antunes", rating: 5, comment: "Perfeita para fazer pão rústico! Retém muito bem o calor." }
+                ]
             },
             {
                 id: 6,
@@ -457,7 +514,10 @@
                 price: 499.90,
                 oldPrice: 599.90,
                 image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=600",
-                description: "Kit completo com faca trinchar, garfo tridente e chaira com maleta executiva em alumínio escovado."
+                description: "Kit completo com faca trinchar, garfo tridente e chaira com maleta executiva em alumínio escovado.",
+                reviews: [
+                    { name: "Fernando Costa", rating: 5, comment: "Presenteei meu pai e ele amou. Maleta de muita classe." }
+                ]
             },
             {
                 id: 7,
@@ -466,7 +526,10 @@
                 price: 479.90,
                 oldPrice: 559.90,
                 image: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&q=80&w=600",
-                description: "Painel touch com 14 programações inteligentes para carnes, sopas, feijão e sobremesas com timer programável."
+                description: "Painel touch com 14 programações inteligentes para carnes, sopas, feijão e sobremesas com timer programável.",
+                reviews: [
+                    { name: "Luciana Rocha", rating: 4, comment: "Facilitou demais o meu dia a dia na cozinha." }
+                ]
             },
             {
                 id: 8,
@@ -475,7 +538,10 @@
                 price: 139.90,
                 oldPrice: 189.90,
                 image: "https://images.unsplash.com/photo-1594834749601-5e7e01460a5b?auto=format&fit=crop&q=80&w=600",
-                description: "Madeira teca de reflorestamento com canaleta coletora de líquidos e tratamento antibacteriano natural."
+                description: "Madeira teca de reflorestamento com canaleta coletora de líquidos e tratamento antibacteriano natural.",
+                reviews: [
+                    { name: "André Luiz", rating: 5, comment: "Madeira robusta e de altíssima qualidade. Recomendo!" }
+                ]
             }
         ];
 
@@ -483,6 +549,7 @@
         let currentCategory = 'todos';
         let discountPercent = 0;
         let shippingCost = 0;
+        let activeModalProductId = null;
 
         // Inicialização do Catálogo ao carregar a página
         document.addEventListener('DOMContentLoaded', () => {
@@ -493,7 +560,28 @@
             document.getElementById('searchInputMobile').addEventListener('input', (e) => handleSearch(e.target.value));
         });
 
-        // Renderiza os produtos na tela
+        // Função auxiliar para calcular média de estrelas
+        function getAverageRating(reviews) {
+            if (!reviews || reviews.length === 0) return { avg: 5.0, count: 0 };
+            const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+            return { avg: (sum / reviews.length).toFixed(1), count: reviews.length };
+        }
+
+        // Renderiza as estrelas em HTML
+        function renderStars(rating) {
+            let html = '';
+            const fullStars = Math.floor(rating);
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    html += `<i class="fa-solid fa-star text-amber-400"></i>`;
+                } else {
+                    html += `<i class="fa-regular fa-star text-amber-400"></i>`;
+                }
+            }
+            return html;
+        }
+
+        // Renderiza os produtos na tela (com nota e número de avaliações no card)
         function renderProducts(items) {
             const grid = document.getElementById('productGrid');
             const noProducts = document.getElementById('noProducts');
@@ -507,6 +595,7 @@
             }
 
             items.forEach(prod => {
+                const { avg, count } = getAverageRating(prod.reviews);
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition flex flex-col justify-between group";
                 card.innerHTML = `
@@ -516,6 +605,11 @@
                     </div>
                     <div class="p-3 sm:p-5 flex flex-col flex-1 justify-between space-y-3">
                         <div>
+                            <!-- Bloco de Avaliação no Card -->
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <div class="flex text-xs">${renderStars(avg)}</div>
+                                <span class="text-[11px] text-gray-500 font-medium">${avg} (${count})</span>
+                            </div>
                             <h3 class="font-serif text-sm sm:text-lg font-bold text-brand-dark line-clamp-2 cursor-pointer hover:text-brand-gold transition" onclick="openProductModal(${prod.id})">${prod.name}</h3>
                             <p class="text-xs text-gray-500 line-clamp-2 mt-1 hidden sm:block">${prod.description}</p>
                         </div>
@@ -538,7 +632,6 @@
         function filterCategory(category) {
             currentCategory = category;
             
-            // Atualizar estilo visual dos botões
             document.querySelectorAll('.category-btn').forEach(btn => {
                 if(btn.textContent.trim().toLowerCase() === category.toLowerCase() || (category === 'todos' && btn.textContent.trim().toLowerCase() === 'todos')) {
                     btn.className = "category-btn active px-4 py-2 rounded-full text-sm font-semibold transition bg-brand-dark text-white shadow-sm";
@@ -591,8 +684,6 @@
             }
 
             updateCartUI();
-            
-            // Abrir o carrinho automaticamente ao adicionar
             document.getElementById('cartModal').classList.remove('hidden');
         }
 
@@ -657,8 +748,9 @@
             totalElem.textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
         }
 
-        // Modal de Detalhes do Produto
+        // Modal de Detalhes do Produto e Avaliações
         function openProductModal(id) {
+            activeModalProductId = id;
             const prod = products.find(p => p.id === id);
             if (!prod) return;
 
@@ -669,6 +761,18 @@
             document.getElementById('modalPrice').textContent = `R$ ${prod.price.toFixed(2).replace('.', ',')}`;
             document.getElementById('modalOldPrice').textContent = `R$ ${prod.oldPrice.toFixed(2).replace('.', ',')}`;
             
+            // Renderizar cabeçalho de avaliações no modal
+            const { avg, count } = getAverageRating(prod.reviews);
+            document.getElementById('modalRatingHeader').innerHTML = `
+                <div class="flex">${renderStars(avg)}</div>
+                <span class="text-sm font-bold text-brand-dark ml-1">${avg}</span>
+                <span class="text-xs text-gray-500">(${count} avaliações)</span>
+            `;
+            document.getElementById('modalReviewCount').textContent = `${count} ${count === 1 ? 'Avaliação' : 'Avaliações'}`;
+
+            // Renderizar lista de comentários
+            renderReviewsList(prod.reviews);
+
             const addBtn = document.getElementById('modalAddBtn');
             addBtn.onclick = () => {
                 addToCart(prod.id);
@@ -678,13 +782,59 @@
             document.getElementById('productModal').classList.remove('hidden');
         }
 
+        function renderReviewsList(reviews) {
+            const listContainer = document.getElementById('modalReviewsList');
+            if (!reviews || reviews.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-gray-400 italic">Ainda não há avaliações para este produto. Seja o primeiro!</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            reviews.forEach(rev => {
+                const div = document.createElement('div');
+                div.className = "bg-gray-50 border border-gray-100 rounded-xl p-3 space-y-1";
+                div.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-brand-dark">${rev.name}</span>
+                        <div class="flex text-[11px]">${renderStars(rev.rating)}</div>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-relaxed">${rev.comment}</p>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        // Enviar nova avaliação
+        function submitReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewerName').value.trim();
+            const rating = parseInt(document.getElementById('reviewerRating').value);
+            const comment = document.getElementById('reviewerComment').value.trim();
+
+            if (!name || !comment) return;
+
+            const prod = products.find(p => p.id === activeModalProductId);
+            if (prod) {
+                prod.reviews.unshift({ name, rating, comment });
+                // Atualizar modal e grade principal
+                openProductModal(prod.id);
+                renderProducts(products);
+                
+                // Limpar campos do form
+                document.getElementById('reviewerName').value = '';
+                document.getElementById('reviewerComment').value = '';
+                alert('Avaliação enviada com sucesso!');
+            }
+        }
+
         function closeProductModal() {
             document.getElementById('productModal').classList.add('hidden');
+            activeModalProductId = null;
         }
 
         // Fluxo de Checkout
         function proceedToCheckout() {
-            toggleCart(); // fecha carrinho
+            toggleCart();
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const finalTotal = subtotal - (subtotal * discountPercent) + shippingCost;
             document.getElementById('finalCheckoutTotal').textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
@@ -698,7 +848,7 @@
         function calculateFreight(cep) {
             const cleanCep = cep.replace(/\D/g, '');
             if (cleanCep.length === 8) {
-                shippingCost = 25.00; // Frete fixo simulado
+                shippingCost = 25.00;
                 document.getElementById('cartShipping').textContent = `R$ 25,00`;
                 updateCartUI();
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -735,20 +885,17 @@
             const finalTotal = subtotal - (subtotal * discountPercent) + shippingCost;
             const randomOrderNum = Math.floor(1000 + Math.random() * 9000);
 
-            // Fechar modal de checkout
             closeCheckoutModal();
 
-            // Preencher dados do modal de e-mail simulado
+            // Preencher dados do e-mail simulado
             document.getElementById('sentEmailAddress').textContent = email;
             document.getElementById('emailCustomerName').textContent = name;
             document.getElementById('emailOrderNumber').textContent = randomOrderNum;
             document.getElementById('emailPaymentMethod').textContent = selectedPayment;
             document.getElementById('emailTotalValue').textContent = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
 
-            // Exibir modal de confirmação de e-mail enviado
             document.getElementById('emailModal').classList.remove('hidden');
 
-            // Limpar carrinho
             cart = [];
             discountPercent = 0;
             shippingCost = 0;
