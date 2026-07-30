@@ -1,341 +1,686 @@
+<!-- HTML -->
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Essenza DiChef - Alta Culinária em Sua Casa</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome para Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#111827',
-                            gold: '#D97706',
-                            goldLight: '#F59E0B',
-                            light: '#F3F4F6'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essenza DiChef | Alta Cutelaria e Utensílios Gourmet</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              400: '#D4AF37',
+              500: '#C5A059',
+              600: '#AA8239',
+            },
+            dark: {
+              800: '#1A1A1A',
+              900: '#111111',
+              950: '#0A0A0A',
             }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
         }
-    </script>
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+<body class="bg-dark-950 text-stone-200 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-dark-900">
 
-    <!-- BARRA DE AVISO TOPO -->
-    <div class="bg-brand-dark text-amber-400 text-xs sm:text-sm text-center py-2 px-4 font-medium tracking-wide">
-        🔥 Frete Grátis para todo o Brasil + 10% OFF no pagamento via PIX!
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 bg-dark-900/95 backdrop-blur-md border-b border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center space-x-2">
+        <i class="fa-solid fa-utensils text-gold-500 text-xl"></i>
+        <span class="font-serif text-xl sm:text-2xl font-bold tracking-wider text-stone-100">ESSENZA <span class="text-gold-500">DiCHEF</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-stone-300">
+        <a href="#" class="hover:text-gold-400 transition-colors">Início</a>
+        <a href="#produtos" class="hover:text-gold-400 transition-colors">Coleções</a>
+        <a href="#" class="hover:text-gold-400 transition-colors">Sobre</a>
+        <a href="#" class="hover:text-gold-400 transition-colors">Contato</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center space-x-4">
+        <button id="search-toggle" class="text-stone-300 hover:text-gold-400 transition-colors p-2">
+          <i class="fa-solid fa-magnifying-glass text-lg"></i>
+        </button>
+        <button id="cart-btn" class="relative bg-dark-800 hover:bg-stone-800 text-stone-200 p-2.5 rounded-full border border-stone-700 transition-all flex items-center justify-center">
+          <i class="fa-solid fa-bag-shopping text-gold-400"></i>
+          <span id="cart-count" class="absolute -top-1 -right-1 bg-gold-500 text-dark-900 font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+        </button>
+        <button id="mobile-menu-btn" class="md:hidden text-stone-300 hover:text-gold-400 p-2">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- HEADER / NAVBAR -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl font-serif font-bold tracking-wider text-brand-dark">ESSENZA <span class="text-amber-600 font-sans font-light text-xl">DiChef</span></span>
-            </div>
-            
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-                <a href="#produtos" class="hover:text-amber-600 transition">Produtos</a>
-                <a href="#sobre" class="hover:text-amber-600 transition">Nossa História</a>
-                <a href="#garantia" class="hover:text-amber-600 transition">Garantia</a>
-            </nav>
+    <!-- Search Bar Expandable -->
+    <div id="search-bar" class="hidden bg-dark-900 border-t border-stone-800 px-4 py-3">
+      <div class="max-w-3xl mx-auto flex items-center space-x-2">
+        <input type="text" id="search-input" placeholder="O que você procura para sua cozinha?" class="w-full bg-dark-950 border border-stone-700 rounded-lg px-4 py-2 text-sm text-stone-200 focus:outline-none focus:border-gold-500">
+        <button id="search-submit" class="bg-gold-500 text-dark-900 font-bold px-4 py-2 rounded-lg text-sm hover:bg-gold-600 transition-colors">Buscar</button>
+      </div>
+    </div>
 
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleCart()" class="relative p-2 text-gray-700 hover:text-amber-600 transition focus:outline-none">
-                    <i class="fa-solid fa-bag-shopping text-xl"></i>
-                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-amber-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-dark-900 border-t border-stone-800 px-6 py-4 space-y-3">
+      <a href="#" class="block text-stone-300 hover:text-gold-400 py-1">Início</a>
+      <a href="#produtos" class="block text-stone-300 hover:text-gold-400 py-1">Coleções</a>
+      <a href="#" class="block text-stone-300 hover:text-gold-400 py-1">Sobre</a>
+      <a href="#" class="block text-stone-300 hover:text-gold-400 py-1">Contato</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-dark-900 py-20 lg:py-32 border-b border-stone-800 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#C5A059_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
+      <span class="text-gold-400 uppercase tracking-widest text-xs font-bold mb-3 block">Especial de Aniversário</span>
+      <h1 class="font-serif text-4xl sm:text-6xl font-bold text-stone-100 mb-6 leading-tight">20% de Desconto em <span class="text-gold-400 italic">Todo o Site</span> <span class="block text-2xl sm:text-3xl text-gold-400 mt-2 font-sans font-normal">+ 5% OFF no PIX</span></h1>
+      <p class="text-stone-400 text-base sm:text-lg mb-8">Comemore nosso aniversário aproveitando nossa linha exclusiva com preços acessíveis e competitivos, garantindo excelentes margens de lucro para o negócio sem perder o apelo de vendas.</p>
+      <a href="#produtos" class="inline-block bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold px-8 py-4 rounded-xl text-sm uppercase tracking-wider transition-all shadow-lg hover:shadow-gold-500/20">
+        Explorar Coleção de Aniversário
+      </a>
+    </div>
+  </section>
+
+  <!-- Main Content & Products Section -->
+  <main id="produtos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-stone-800">
+      <div>
+        <span class="text-gold-400 uppercase tracking-wider text-xs font-bold block mb-1">Catálogo Exclusivo</span>
+        <h2 class="font-serif text-3xl font-bold text-stone-100">Nossos Produtos</h2>
+      </div>
+
+      <!-- Categories Tabs -->
+      <div class="flex flex-wrap gap-2 mt-6 md:mt-0">
+        <button data-category="todos" class="cat-tab bg-gold-500 text-dark-900 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-md">Todos</button>
+        <button data-category="panelas" class="cat-tab bg-dark-800 text-stone-300 border border-stone-700 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all hover:border-gold-500">Panelas</button>
+        <button data-category="cutelaria" class="cat-tab bg-dark-800 text-stone-300 border border-stone-700 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all hover:border-gold-500">Cutelaria</button>
+        <button data-category="eletroportateis" class="cat-tab bg-dark-800 text-stone-300 border border-stone-700 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all hover:border-gold-500">Eletros</button>
+        <button data-category="acessorios" class="cat-tab bg-dark-800 text-stone-300 border border-stone-700 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all hover:border-gold-500">Acessórios</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" class="grid grid-cols-2 gap-4 sm:gap-6">
+      <!-- Injetado via JS -->
+    </div>
+  </main>
+
+  <!-- Rodapé Profissional com Links Legais -->
+  <footer class="bg-dark-900 border-t border-stone-800 text-stone-400 pt-16 pb-8 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-stone-800 items-center">
+        <div class="lg:col-span-5">
+          <div class="flex items-center space-x-2 mb-3">
+            <i class="fa-solid fa-utensils text-gold-500 text-xl"></i>
+            <span class="font-serif text-xl font-bold tracking-wider text-stone-100">ESSENZA <span class="text-gold-500">DiCHEF</span></span>
+          </div>
+          <p class="text-xs text-stone-400 leading-relaxed">
+            Cadastre-se para receber ofertas exclusivas, novidades de aniversário e receitas assinadas por chefs renomados diretamente no seu e-mail.
+          </p>
+        </div>
+        <div class="lg:col-span-7">
+          <form onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');" class="flex flex-col sm:flex-row gap-2">
+            <input type="email" placeholder="Digite seu melhor e-mail" required class="bg-dark-950 border border-stone-700 rounded-xl px-4 py-3 text-xs text-stone-200 focus:outline-none focus:border-gold-500 flex-1">
+            <button type="submit" class="bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md">
+              Cadastrar-se
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-12 border-b border-stone-800 text-xs">
+        <div>
+          <h4 class="text-stone-200 font-bold uppercase tracking-wider mb-4 text-sm">Coleções</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#produtos" class="hover:text-gold-400 transition-colors">Panelas & Caçarolas</a></li>
+            <li><a href="#produtos" class="hover:text-gold-400 transition-colors">Cutelaria & Facas</a></li>
+            <li><a href="#produtos" class="hover:text-gold-400 transition-colors">Eletroportáteis</a></li>
+            <li><a href="#produtos" class="hover:text-gold-400 transition-colors">Acessórios & Mesa</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-stone-200 font-bold uppercase tracking-wider mb-4 text-sm">Atendimento</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#" class="hover:text-gold-400 transition-colors">Central de Ajuda</a></li>
+            <li><a href="#" class="hover:text-gold-400 transition-colors">Rastreie seu Pedido</a></li>
+            <li><button onclick="openModal('returns')" class="hover:text-gold-400 transition-colors text-left">Trocas e Devoluções</button></li>
+            <li><a href="#" class="hover:text-gold-400 transition-colors">Garantia Vitalícia</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-stone-200 font-bold uppercase tracking-wider mb-4 text-sm">Legal & Compliance</h4>
+          <ul class="space-y-2.5">
+            <li><button onclick="openModal('privacy')" class="hover:text-gold-400 transition-colors text-left">Política de Privacidade</button></li>
+            <li><button onclick="openModal('terms')" class="hover:text-gold-400 transition-colors text-left">Termos de Uso</button></li>
+            <li><button onclick="openModal('returns')" class="hover:text-gold-400 transition-colors text-left">Política de Trocas</button></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-stone-200 font-bold uppercase tracking-wider mb-4 text-sm">Conecte-se</h4>
+          <ul class="space-y-2.5 mb-4">
+            <li class="flex items-center space-x-2 text-stone-400">
+              <i class="fa-brands fa-whatsapp text-gold-400"></i>
+              <span>(11) 99999-9999</span>
+            </li>
+            <li class="flex items-center space-x-2 text-stone-400">
+              <i class="fa-regular fa-envelope text-gold-400"></i>
+              <span>contato@essenzadichef.com.br</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-span-2 md:col-span-4 lg:col-span-1">
+          <h4 class="text-stone-200 font-bold uppercase tracking-wider mb-4 text-sm">Segurança</h4>
+          <div class="space-y-2 text-stone-500">
+            <div class="flex items-center space-x-2"><i class="fa-solid fa-shield-halved text-gold-400"></i><span>Site 100% Seguro</span></div>
+            <div class="flex items-center space-x-2"><i class="fa-solid fa-truck-fast text-gold-400"></i><span>Envio Rastreado</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-stone-500 space-y-4 md:space-y-0">
+        <p>&copy; 2026 Essenza DiChef Comércio de Utensílios Gourmet LTDA. Todos os direitos reservados.</p>
+        <div class="flex items-center space-x-3 text-lg text-stone-400">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-pix"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart & Checkout Drawer Overlay -->
+  <div id="cart-drawer" class="hidden fixed inset-0 z-50 overflow-hidden">
+    <div id="cart-backdrop" class="absolute inset-0 bg-dark-950/80 backdrop-blur-sm transition-opacity"></div>
+    <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-dark-900 border-l border-stone-800 flex flex-col justify-between shadow-2xl">
+        <div class="p-6 border-b border-stone-800 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-bag-shopping text-gold-400"></i>
+            <h3 id="drawer-title" class="font-serif text-lg font-bold text-stone-100">Seu Carrinho</h3>
+          </div>
+          <button id="close-cart" class="text-stone-400 hover:text-stone-100 p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div id="drawer-content" class="p-6 flex-1 overflow-y-auto space-y-4"></div>
+        <div id="drawer-footer" class="p-6 border-t border-stone-800 bg-dark-950"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legal Info Modal -->
+  <div id="legal-modal" class="hidden fixed inset-0 z-50 overflow-y-auto px-4 flex items-center justify-center">
+    <div class="fixed inset-0 bg-dark-950/80 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-dark-900 border border-stone-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 z-10 shadow-2xl text-stone-300">
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-stone-800">
+        <h3 id="modal-title" class="font-serif text-xl font-bold text-stone-100">Título Legal</h3>
+        <button onclick="closeModal()" class="text-stone-400 hover:text-stone-100 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div id="modal-body" class="text-xs sm:text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2 leading-relaxed text-stone-400">
+        <!-- Conteúdo injetado via JS -->
+      </div>
+      <div class="pt-6 mt-6 border-t border-stone-800 text-right">
+        <button onclick="closeModal()" class="bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript com preços ajustados (20% de desconto base + 5% adicional no PIX) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Base de produtos ajustada com 20% de desconto automático (fator 0.80) para garantir boa margem de lucro e manter preço atrativo
+      const rawProductsData = [
+        { id: 1, name: "Conjunto Copper Royal 7 Peças", category: "panelas", basePrice: 690, tag: "20% OFF" },
+        { id: 2, name: "Caçarola de Ferro Fundido Esmaltado 28cm", category: "panelas", basePrice: 320, tag: "20% OFF" },
+        { id: 3, name: "Frigideira Antiaderente Diamond Pro 26cm", category: "panelas", basePrice: 160, tag: "20% OFF" },
+        { id: 4, name: "Panela de Pressão Silenciosa Titanium 6L", category: "panelas", basePrice: 240, tag: "20% OFF" },
+        { id: 5, name: "Wok Profissional em Aço Inox 30cm", category: "panelas", basePrice: 190, tag: "20% OFF" },
+        { id: 6, name: "Caldeirão Clássico Gourmet 10L", category: "panelas", basePrice: 210, tag: "20% OFF" },
+        { id: 7, name: "Assadeira Retangular Inox Tripla Camada", category: "panelas", basePrice: 130, tag: "20% OFF" },
+        { id: 8, name: "Conjunto de Panelas Inox MasterChef 5 Pçs", category: "panelas", basePrice: 590, tag: "20% OFF" },
+        { id: 9, name: "Jogo de Facas Damasco 6 Peças com Bloco", category: "cutelaria", basePrice: 490, tag: "20% OFF" },
+        { id: 10, name: "Faca Chef Santoku 8 Polegadas Aço Alemão", category: "cutelaria", basePrice: 150, tag: "20% OFF" },
+        { id: 11, name: "Faca para Desossa Profissional Ergonomic", category: "cutelaria", basePrice: 90, tag: "20% OFF" },
+        { id: 12, name: "Kit Churrasco Premium Cabo em Madeira Nobre", category: "cutelaria", basePrice: 290, tag: "20% OFF" },
+        { id: 17, name: "Batedeira Planetária BakerPro 800W Vermelha", category: "eletroportateis", basePrice: 490, tag: "20% OFF" },
+        { id: 18, name: "Liquidificador de Alta Performance 2.2L", category: "eletroportateis", basePrice: 350, tag: "20% OFF" },
+        { id: 19, name: "Espresso Machine Barista Touch 20 Bar", category: "eletroportateis", basePrice: 890, tag: "20% OFF" },
+        { id: 25, name: "Tábuas de Corte em Madeira Teca Rústica", category: "acessorios", basePrice: 110, tag: "20% OFF" },
+        { id: 26, name: "Moedor de Sal e Pimenta em Madeira e Inox", category: "acessorios", basePrice: 90, tag: "20% OFF" },
+        { id: 27, name: "Conjunto de Talheres Gold Matte 24 Peças", category: "acessorios", basePrice: 280, tag: "20% OFF" }
+      ];
+
+      const productsData = rawProductsData.map(p => {
+        const discountedPrice = Math.round(p.basePrice * 0.80);
+        const imagesUnsplash = {
+          panelas: "https://images.unsplash.com/photo-1584990347426-c7853cd4af0c?auto=format&fit=crop&w=600&q=80",
+          cutelaria: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80",
+          eletroportateis: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80",
+          acessorios: "https://images.unsplash.com/photo-1590779035900-4ec5e9103f44?auto=format&fit=crop&w=600&q=80"
+        };
+        return {
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          price: discountedPrice,
+          oldPrice: p.basePrice,
+          rating: 5,
+          img: imagesUnsplash[p.category] || imagesUnsplash.panelas,
+          tag: p.tag
+        };
+      });
+
+      let cart = JSON.parse(localStorage.getItem('essenza_cart')) || [];
+      cart = cart.map(item => ({
+        ...item,
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 1
+      }));
+
+      let currentStep = 'cart'; 
+      let activeCategory = 'todos';
+
+      const productGrid = document.getElementById('product-grid');
+      const cartCountEl = document.getElementById('cart-count');
+      const cartDrawer = document.getElementById('cart-drawer');
+      const cartBackdrop = document.getElementById('cart-backdrop');
+      const cartBtn = document.getElementById('cart-btn');
+      const closeCartBtn = document.getElementById('close-cart');
+      const drawerTitle = document.getElementById('drawer-title');
+      const drawerContent = document.getElementById('drawer-content');
+      const drawerFooter = document.getElementById('drawer-footer');
+      
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const searchToggle = document.getElementById('search-toggle');
+      const searchBar = document.getElementById('search-bar');
+      const searchInput = document.getElementById('search-input');
+      const searchSubmit = document.getElementById('search-submit');
+      const catTabs = document.querySelectorAll('.cat-tab');
+
+      function saveCart() {
+        localStorage.setItem('essenza_cart', JSON.stringify(cart));
+      }
+
+      function renderProducts(filterCategory = activeCategory, searchQuery = '') {
+        if (!productGrid) return;
+        productGrid.innerHTML = '';
+        
+        const filtered = productsData.filter(product => {
+          const matchesCategory = filterCategory === 'todos' || product.category === filterCategory;
+          const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCategory && matchesSearch;
+        });
+        
+        if (filtered.length === 0) {
+          productGrid.innerHTML = '<div class="col-span-full text-center py-16 text-stone-400">Nenhum produto encontrado.</div>';
+          return;
+        }
+        
+        filtered.forEach(product => {
+          const card = document.createElement('div');
+          card.className = "bg-dark-800 rounded-2xl border border-stone-800 overflow-hidden flex flex-col justify-between group hover:border-gold-500/50 transition-all duration-300 shadow-lg";
+          
+          let tagHtml = product.tag ? `<span class="absolute top-3 left-3 bg-gold-500 text-dark-900 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${product.tag}</span>` : '';
+          
+          card.innerHTML = `
+            <div class="relative overflow-hidden bg-dark-900 h-48 sm:h-64">
+              ${tagHtml}
+              <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between">
+              <div>
+                <div class="flex items-center space-x-1 text-gold-400 text-xs mb-2">
+                  <i class="fa-solid fa-star"></i>
+                  <span class="font-semibold text-stone-300">${product.rating}</span>
+                </div>
+                <h3 class="font-serif text-sm sm:text-base text-stone-100 font-bold mb-2 line-clamp-2 group-hover:text-gold-400 transition-colors">${product.name}</h3>
+              </div>
+              <div>
+                <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2 mb-4">
+                  <span class="text-gold-400 font-bold text-base sm:text-lg">R$ ${product.price.toLocaleString('pt-BR')}</span>
+                  <span class="text-stone-500 text-[11px] sm:text-xs line-through">R$ ${product.oldPrice.toLocaleString('pt-BR')}</span>
+                </div>
+                <button onclick="window.addToCart(${product.id})" class="w-full bg-gold-500/10 hover:bg-gold-500 text-gold-400 hover:text-dark-900 font-bold py-2.5 rounded-lg text-[11px] sm:text-xs uppercase tracking-wider transition-all border border-gold-500/30">
+                  Adicionar ao Carrinho
                 </button>
+              </div>
             </div>
-        </div>
-    </header>
+          `;
+          productGrid.appendChild(card);
+        });
+      }
 
-    <!-- HERO SECTION -->
-    <section class="relative bg-brand-dark text-white overflow-hidden">
-        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#D97706_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <span class="inline-block bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs uppercase px-3 py-1 rounded-full font-semibold tracking-wider mb-6">Coleção Exclusiva</span>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
-                    A arte de cozinhar com <span class="text-amber-500 italic">perfeição</span>.
-                </h1>
-                <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                    Utensílios de alto padrão projetados para chefs exigentes. Desfrute de design sofisticado, durabilidade extrema e antiaderência impecável.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="#produtos" class="bg-amber-600 hover:bg-amber-700 text-white font-medium px-8 py-4 rounded-xl text-center shadow-lg shadow-amber-600/30 transition transform hover:-translate-y-0.5">
-                        Ver Coleção
-                    </a>
+      window.addToCart = function(productId) {
+        const product = productsData.find(p => p.id === productId);
+        if (!product) return;
+        
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ ...product, quantity: 1 });
+        }
+        
+        saveCart();
+        currentStep = 'cart';
+        updateDrawerUI();
+        openCart();
+      };
+
+      function updateDrawerUI() {
+        const totalCount = cart.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+        if (cartCountEl) cartCountEl.textContent = totalCount;
+        
+        if (!drawerContent || !drawerFooter) return;
+
+        let subtotal = cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
+
+        if (currentStep === 'cart') {
+          drawerTitle.textContent = 'Seu Carrinho';
+          
+          if (cart.length === 0) {
+            drawerContent.innerHTML = '<p class="text-stone-400 text-center py-16 text-sm">Seu carrinho está vazio.</p>';
+            drawerFooter.innerHTML = '';
+            return;
+          }
+
+          let itemsHtml = '';
+          cart.forEach(item => {
+            itemsHtml += `
+              <div class="flex items-center justify-between bg-dark-900 p-3 rounded-xl border border-stone-800">
+                <div class="flex items-center space-x-3">
+                  <img src="${item.img}" alt="${item.name}" class="w-14 h-14 object-cover rounded-lg">
+                  <div>
+                    <h4 class="text-stone-200 text-xs font-semibold line-clamp-1">${item.name}</h4>
+                    <span class="text-gold-400 text-xs font-bold">R$ ${(Number(item.price) || 0).toLocaleString('pt-BR')}</span>
+                  </div>
                 </div>
+                <div class="flex items-center space-x-2">
+                  <button onclick="window.changeQuantity(${item.id}, -1)" class="w-6 h-6 rounded bg-dark-800 text-stone-300 hover:text-gold-400 flex items-center justify-center text-xs">-</button>
+                  <span class="text-stone-200 text-xs font-bold">${item.quantity}</span>
+                  <button onclick="window.changeQuantity(${item.id}, 1)" class="w-6 h-6 rounded bg-dark-800 text-stone-300 hover:text-gold-400 flex items-center justify-center text-xs">+</button>
+                  <button onclick="window.removeItem(${item.id})" class="text-stone-500 hover:text-red-400 ml-2 text-xs">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = itemsHtml;
+
+          drawerFooter.innerHTML = `
+            <div class="space-y-2 mb-4 text-xs">
+              <div class="flex justify-between text-stone-400">
+                <span>Subtotal (20% OFF Aplicado)</span>
+                <span class="text-stone-200 font-semibold">R$ ${subtotal.toLocaleString('pt-BR')},00</span>
+              </div>
+              <div class="flex justify-between text-stone-400">
+                <span>Frete</span>
+                <span class="text-gold-400 font-semibold uppercase">Grátis</span>
+              </div>
+              <div class="flex justify-between text-sm font-bold text-stone-100 pt-2 border-t border-stone-800">
+                <span>Total (Cartão)</span>
+                <span class="text-gold-400 text-base">R$ ${subtotal.toLocaleString('pt-BR')},00</span>
+              </div>
+              <div class="flex justify-between text-xs text-gold-400 pt-1 font-semibold">
+                <span>No PIX (-5% extra):</span>
+                <span>R$ ${Math.round(subtotal * 0.95).toLocaleString('pt-BR')},00</span>
+              </div>
             </div>
-            <div class="relative">
-                <div class="absolute -inset-1 bg-gradient-to-r from-amber-600 to-amber-300 rounded-2xl blur-lg opacity-30"></div>
-                <div class="relative bg-gray-900 rounded-2xl border border-gray-800 p-4 shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80" alt="Cozinha Sofisticada" class="rounded-xl w-full h-[380px] object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
+            <button onclick="window.goToCheckout()" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg text-center block cursor-pointer">
+              Continuar para Identificação
+            </button>
+          `;
 
-    <!-- SELOS DE GARANTIA E SEGURANÇA -->
-    <section id="garantia" class="bg-white py-12 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="flex items-center space-x-4 p-6 bg-gray-50 rounded-2xl border border-gray-100 shadow-sm">
-                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl shrink-0">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Compra 100% Segura</h3>
-                        <p class="text-gray-600 text-sm mt-1">Seus dados protegidos por criptografia de ponta a ponta.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-4 p-6 bg-gray-50 rounded-2xl border border-gray-100 shadow-sm">
-                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl shrink-0">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Garantia de 7 Dias</h3>
-                        <p class="text-gray-600 text-sm mt-1">Não amou o produto? Devolvemos 100% do seu dinheiro sem burocracia.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-4 p-6 bg-gray-50 rounded-2xl border border-gray-100 shadow-sm">
-                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl shrink-0">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Garantia de Fábrica</h3>
-                        <p class="text-gray-600 text-sm mt-1">Materiais premium com durabilidade vitalícia testada e aprovada.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO SOBRE A MARCA / HISTÓRIA -->
-    <section id="sobre" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        } else if (currentStep === 'checkout') {
+          drawerTitle.textContent = 'Finalizar Pedido';
+          
+          drawerContent.innerHTML = `
+            <form id="checkout-form" class="space-y-4 text-xs">
+              <h4 class="text-gold-400 font-bold uppercase tracking-wider mb-2">1. Dados de Contato e Entrega</h4>
+              <div>
+                <label class="block text-stone-400 mb-1">Nome Completo</label>
+                <input type="text" id="chk-name" required class="w-full bg-dark-950 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-gold-500">
+              </div>
+              <div>
+                <label class="block text-stone-400 mb-1">E-mail</label>
+                <input type="email" id="chk-email" required class="w-full bg-dark-950 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-gold-500">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <span class="text-amber-600 font-semibold tracking-wider text-xs uppercase bg-amber-100 px-3 py-1 rounded-full">Nossa Essência</span>
-                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mt-4 mb-6">
-                        Transformando a cozinha no coração da sua casa
-                    </h2>
-                    <p class="text-gray-600 leading-relaxed mb-4">
-                        A **Essenza DiChef** nasceu da paixão pela alta gastronomia e do entendimento de que cozinhar é um ato de amor e criatividade. Acreditamos que os utensílios certos não servem apenas para preparar alimentos, mas para elevar a experiência culinária a um patamar profissional, direto do conforto do seu lar.
-                    </p>
-                    <p class="text-gray-600 leading-relaxed mb-6">
-                        Cada panela, faca e acessório do nosso catálogo é rigorosamente selecionado e submetido a testes de durabilidade, design ergonômico e eficiência térmica. Queremos que você sinta o orgulho de ter uma cozinha equipada com o que há de mais refinado no mundo.
-                    </p>
-                    <div class="grid grid-cols-2 gap-6 pt-4 border-t border-gray-200">
-                        <div>
-                            <span class="block text-3xl font-serif font-bold text-amber-600">+15.000</span>
-                            <span class="text-sm text-gray-500">Cozinhas transformadas</span>
-                        </div>
-                        <div>
-                            <span class="block text-3xl font-serif font-bold text-amber-600">100%</span>
-                            <span class="text-sm text-gray-500">Aprovado por Chefs</span>
-                        </div>
-                    </div>
+                  <label class="block text-stone-400 mb-1">Telefone / WhatsApp</label>
+                  <input type="text" id="chk-phone" required placeholder="(11) 99999-9999" class="w-full bg-dark-950 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-gold-500">
                 </div>
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80" alt="Chef cozinhando" class="rounded-2xl shadow-xl w-full h-[450px] object-cover">
-                    <div class="absolute -bottom-6 -left-6 bg-brand-dark text-white p-6 rounded-2xl shadow-xl hidden sm:block max-w-xs border border-gray-800">
-                        <p class="text-amber-400 font-serif italic text-lg mb-2">"O design encontra a alta performance."</p>
-                        <span class="text-xs text-gray-400">— Equipe de Design Essenza</span>
-                    </div>
+                <div>
+                  <label class="block text-stone-400 mb-1">CEP</label>
+                  <input type="text" id="chk-cep" required placeholder="00000-000" class="w-full bg-dark-950 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-gold-500">
                 </div>
+              </div>
+              <div>
+                <label class="block text-stone-400 mb-1">Endereço e Número</label>
+                <input type="text" id="chk-address" required placeholder="Rua Exemplo, 123" class="w-full bg-dark-950 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-gold-500">
+              </div>
+
+              <h4 class="text-gold-400 font-bold uppercase tracking-wider pt-3 mb-2">2. Forma de Pagamento</h4>
+              <div class="space-y-2">
+                <label class="flex items-center space-x-2 bg-dark-950 p-3 rounded-lg border border-stone-800 cursor-pointer hover:border-gold-500">
+                  <input type="radio" name="payment" value="pix" checked onchange="window.updateCheckoutTotal()" class="text-gold-500 focus:ring-0">
+                  <span class="text-stone-200 font-semibold">PIX (Mais 5% de Desconto extra)</span>
+                </label>
+                <label class="flex items-center space-x-2 bg-dark-950 p-3 rounded-lg border border-stone-800 cursor-pointer hover:border-gold-500">
+                  <input type="radio" name="payment" value="credit" onchange="window.updateCheckoutTotal()" class="text-gold-500 focus:ring-0">
+                  <span class="text-stone-200 font-semibold">Cartão de Crédito (Até 12x Sem Juros)</span>
+                </label>
+              </div>
+            </form>
+          `;
+
+          const isPixSelected = true; 
+          const finalSubtotal = isPixSelected ? Math.round(subtotal * 0.95) : subtotal;
+
+          drawerFooter.innerHTML = `
+            <div class="flex justify-between items-center mb-4 text-xs">
+              <button onclick="window.setCartStep('cart')" class="text-stone-400 hover:text-stone-200 underline">Voltar ao Carrinho</button>
+              <div class="text-right">
+                <span class="text-stone-400 block">Total a pagar:</span>
+                <span id="checkout-total-val" class="text-gold-400 text-base font-bold">R$ ${finalSubtotal.toLocaleString('pt-BR')},00</span>
+              </div>
             </div>
-        </div>
-    </section>
+            <button onclick="window.submitOrder()" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg text-center block cursor-pointer">
+              Confirmar e Concluir Pedido
+            </button>
+          `;
 
-    <!-- LISTAGEM DE PRODUTOS -->
-    <section id="produtos" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-amber-600 font-semibold tracking-wider text-xs uppercase bg-amber-100 px-3 py-1 rounded-full">Catálogo</span>
-                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mt-3 mb-4">Escolha o seu padrão DiChef</h2>
-                <p class="text-gray-600">Investimento inteligente para quem valoriza qualidade superior na cozinha.</p>
+        } else if (currentStep === 'success') {
+          drawerTitle.textContent = 'Pedido Realizado!';
+          const orderId = Math.floor(100000 + Math.random() * 900000);
+          
+          drawerContent.innerHTML = `
+            <div class="text-center py-8 space-y-4">
+              <div class="w-16 h-16 bg-gold-500/10 text-gold-400 rounded-full flex items-center justify-center mx-auto text-3xl border border-gold-500/30">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-stone-100">Parabéns por sua compra!</h3>
+              <p class="text-stone-400 text-xs leading-relaxed">
+                Seu pedido (<strong class="text-gold-400">#${orderId}</strong>) foi registrado com sucesso com o desconto promocional de <strong class="text-gold-400">20% OFF</strong> aplicado. Enviamos os detalhes de pagamento e rastreio para o seu e-mail.
+              </p>
             </div>
+          `;
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Produto 1 -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition flex flex-col overflow-hidden group">
-                    <div class="relative overflow-hidden bg-gray-100 h-64">
-                        <img src="https://images.unsplash.com/photo-1584990347426-c785bc675703?auto=format&fit=crop&w=600&q=80" alt="Kit Panelas Ceramic Premium" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">Mais Vendido</span>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="font-serif font-bold text-xl text-gray-900 mb-2">Kit Panelas Ceramic Premium (6 Peças)</h3>
-                        <p class="text-gray-600 text-sm mb-4 flex-grow">Revestimento cerâmico avançado, livre de toxinas, compatível com fogão de indução.</p>
-                        <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-gray-400 line-through block">R$ 1.299,90</span>
-                                <span class="text-2xl font-bold text-gray-900">R$ 899,90</span>
-                            </div>
-                            <button onclick="addToCart('Kit Panelas Ceramic Premium', 899.90, 'https://images.unsplash.com/photo-1584990347426-c785bc675703?auto=format&fit=crop&w=600&q=80')" class="bg-brand-dark hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                                <i class="fa-solid fa-cart-plus"></i>
-                                <span>Adicionar</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          drawerFooter.innerHTML = `
+            <button onclick="window.closeCartAndClear()" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg text-center block cursor-pointer">
+              Fechar e Continuar Navegando
+            </button>
+          `;
+        }
+      }
 
-                <!-- Produto 2 -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition flex flex-col overflow-hidden group">
-                    <div class="relative overflow-hidden bg-gray-100 h-64">
-                        <img src="https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80" alt="Faca Chef Aço Damasco" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="font-serif font-bold text-xl text-gray-900 mb-2">Faca Chef Profissional Aço Damasco</h3>
-                        <p class="text-gray-600 text-sm mb-4 flex-grow">67 camadas de aço damasco com fio cirúrgico de alta precisão para cortes perfeitos.</p>
-                        <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-gray-400 line-through block">R$ 599,90</span>
-                                <span class="text-2xl font-bold text-gray-900">R$ 399,90</span>
-                            </div>
-                            <button onclick="addToCart('Faca Chef Profissional Aço Damasco', 399.90, 'https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=600&q=80')" class="bg-brand-dark hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                                <i class="fa-solid fa-cart-plus"></i>
-                                <span>Adicionar</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+      window.updateCheckoutTotal = function() {
+        let subtotal = cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
+        const pixRadio = document.querySelector('input[name="payment"][value="pix"]');
+        const totalValEl = document.getElementById('checkout-total-val');
+        if (totalValEl) {
+          const isPix = pixRadio && pixRadio.checked;
+          const adjusted = isPix ? Math.round(subtotal * 0.95) : subtotal;
+          totalValEl.textContent = `R$ ${adjusted.toLocaleString('pt-BR')},00`;
+        }
+      };
 
-                <!-- Produto 3 -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition flex flex-col overflow-hidden group">
-                    <div class="relative overflow-hidden bg-gray-100 h-64">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" alt="Tábua de Corte Rústica Teak" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="font-serif font-bold text-xl text-gray-900 mb-2">Tábua de Corte Rústica em Madeira Teak</h3>
-                        <p class="text-gray-600 text-sm mb-4 flex-grow">Madeira nobre tratada com óleos naturais, antimicrobiana e resistente a cortes profundos.</p>
-                        <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-gray-400 line-through block">R$ 299,90</span>
-                                <span class="text-2xl font-bold text-gray-900">R$ 189,90</span>
-                            </div>
-                            <button onclick="addToCart('Tábua de Corte Rústica em Madeira Teak', 189.90, 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80')" class="bg-brand-dark hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                                <i class="fa-solid fa-cart-plus"></i>
-                                <span>Adicionar</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      window.setCartStep = function(step) {
+        currentStep = step;
+        updateDrawerUI();
+      }
 
-    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
-    <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20tirar%20dúvidas%20sobre%20os%20produtos%20da%20Essenza%20DiChef." target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-3xl transition transform hover:scale-110 focus:outline-none" title="Fale conosco via WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+      window.changeQuantity = function(productId, delta) {
+        const item = cart.find(i => i.id === productId);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+          cart = cart.filter(i => i.id !== productId);
+        }
+        saveCart();
+        updateDrawerUI();
+      };
 
-    <!-- FOOTER -->
-    <footer class="bg-brand-dark text-gray-400 py-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="text-2xl font-serif font-bold tracking-wider text-white">ESSENZA <span class="text-amber-500 font-sans font-light text-xl">DiChef</span></span>
-            <p class="text-sm mt-4 text-gray-500">© 2026 Essenza DiChef. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+      window.removeItem = function(productId) {
+        cart = cart.filter(i => i.id !== productId);
+        saveCart();
+        updateDrawerUI();
+      };
 
-    <!-- MODAL DO CARRINHO (Lateral) -->
-    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-        <div onclick="toggleCart()" class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
-                <div class="p-6 bg-brand-dark text-white flex items-center justify-between">
-                    <h2 class="font-serif font-bold text-xl">Seu Carrinho</h2>
-                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div id="cart-items" class="p-6 flex-grow overflow-y-auto space-y-4 divide-y divide-gray-100">
-                    <!-- Itens entram dinamicamente -->
-                </div>
-                <div class="p-6 bg-gray-50 border-t border-gray-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-gray-600 font-medium">Total:</span>
-                        <span id="cart-total" class="text-2xl font-bold text-gray-900">R$ 0,00</span>
-                    </div>
-                    <button onclick="openCheckout()" id="checkout-btn" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-xl font-medium shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        Finalizar Compra
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+      window.goToCheckout = function() {
+        if (cart.length === 0) return;
+        currentStep = 'checkout';
+        updateDrawerUI();
+      };
 
-    <!-- SCRIPT DE GERENCIAMENTO DE CARRINHO E CHECKOUT -->
-    <script>
-        let cart = [];
+      window.submitOrder = function() {
+        const name = document.getElementById('chk-name').value;
+        const email = document.getElementById('chk-email').value;
+        const phone = document.getElementById('chk-phone').value;
+        const cep = document.getElementById('chk-cep').value;
+        const address = document.getElementById('chk-address').value;
 
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
+        if (!name || !email || !phone || !cep || !address) {
+          alert('Por favor, preencha todos os campos obrigatórios de entrega.');
+          return;
         }
 
-        function addToCart(name, price, image) {
-            const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({ name, price, image, quantity: 1 });
-            }
-            updateCartUI();
-            toggleCart();
+        currentStep = 'success';
+        saveCart();
+        updateDrawerUI();
+        if (cartCountEl) cartCountEl.textContent = '0';
+      };
+
+      window.closeCartAndClear = function() {
+        closeCart();
+        cart = [];
+        saveCart();
+        updateDrawerUI();
+      }
+
+      function openCart() { if (cartDrawer) cartDrawer.classList.remove('hidden'); }
+      function closeCart() { if (cartDrawer) cartDrawer.classList.add('hidden'); }
+
+      if (cartBtn) cartBtn.addEventListener('click', () => { currentStep = 'cart'; updateDrawerUI(); openCart(); });
+      if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+      if (cartBackdrop) cartBackdrop.addEventListener('click', closeCart);
+
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => { if (mobileMenu) mobileMenu.classList.toggle('hidden'); });
+      }
+
+      if (searchToggle) {
+        searchToggle.addEventListener('click', () => {
+          searchBar.classList.toggle('hidden');
+          if (!searchBar.classList.contains('hidden')) searchInput.focus();
+        });
+      }
+
+      if (searchSubmit) {
+        searchSubmit.addEventListener('click', () => {
+          renderProducts(activeCategory, searchInput.value);
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+          if (e.key === 'Enter') renderProducts(activeCategory, searchInput.value);
+        });
+      }
+
+      catTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          catTabs.forEach(t => {
+            t.classList.remove('bg-gold-500', 'text-dark-900', 'shadow-md');
+            t.classList.add('bg-dark-800', 'text-stone-300', 'border', 'border-stone-700');
+          });
+          tab.classList.remove('bg-dark-800', 'text-stone-300', 'border', 'border-stone-700');
+          tab.classList.add('bg-gold-500', 'text-dark-900', 'shadow-md');
+          
+          activeCategory = tab.getAttribute('data-category');
+          renderProducts(activeCategory, searchInput ? searchInput.value : '');
+        });
+      });
+
+      // Funções do Modal Legal
+      const modal = document.getElementById('legal-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalBody = document.getElementById('modal-body');
+
+      window.openModal = function(type) {
+        if (type === 'privacy') {
+          modalTitle.textContent = 'Política de Privacidade';
+          modalBody.innerHTML = `
+            <p><strong>1. Coleta de Dados:</strong> A Essenza DiChef coleta apenas informações essenciais fornecidas no momento do cadastro e checkout (nome, e-mail, telefone e endereço) para fins exclusivos de processamento e entrega de pedidos.</p>
+            <p><strong>2. Segurança da Informação:</strong> Seus dados são criptografados utilizando padrões avançados de segurança digital. Não compartilhamos nem comercializamos dados com terceiros.</p>
+            <p><strong>3. Uso de Cookies:</strong> Utilizamos cookies e armazenamento local (localStorage) apenas para manter a sessão do seu carrinho ativa e otimizar a navegação no site.</p>
+          `;
+        } else if (type === 'terms') {
+          modalTitle.textContent = 'Termos de Uso';
+          modalBody.innerHTML = `
+            <p><strong>1. Condições Gerais:</strong> Ao acessar e comprar na Essenza DiChef, você concorda com os termos descritos nesta página, comprometendo-se a utilizar a plataforma de forma ética e legal.</p>
+            <p><strong>2. Propriedade Intelectual:</strong> Todo o conteúdo visual, textos, códigos e design do site são protegidos por direitos autorais e pertencem exclusivamente à Essenza DiChef LTDA.</p>
+            <p><strong>3. Preços e Ofertas:</strong> Reservamo-nos o direito de alterar preços, estoques e condições de produtos sem aviso prévio, respeitando sempre os pedidos já confirmados.</p>
+          `;
+        } else if (type === 'returns') {
+          modalTitle.textContent = 'Política de Trocas e Devoluções';
+          modalBody.innerHTML = `
+            <p><strong>1. Direito de Arrependimento:</strong> Conforme o Código de Defesa do Consumidor, você tem até 7 (sete) dias corridos após o recebimento do produto para solicitar a devolução por desistência.</p>
+            <p><strong>2. Garantia Vitalícia e Defeitos:</strong> Nossas panelas e utensílios contam com rigoroso padrão de qualidade. Caso haja qualquer vício de fabricação, o item passará por análise técnica para reposição.</p>
+            <p><strong>3. Condições do Produto:</strong> Para trocas, o item deve ser devolvido em sua embalagem original, sem marcas de uso impróprio e acompanhado da respectiva nota fiscal.</p>
+          `;
         }
+        modal.classList.remove('hidden');
+      };
 
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            const counter = document.getElementById('cart-counter');
-            const totalElement = document.getElementById('cart-total');
-            const checkoutBtn = document.getElementById('checkout-btn');
+      window.closeModal = function() {
+        modal.classList.add('hidden');
+      };
 
-            counter.innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-400 py-12">Seu carrinho está vazio.</p>';
-                totalElement.innerText = 'R$ 0,00';
-                checkoutBtn.disabled = true;
-                return;
-            }
-
-            checkoutBtn.disabled = false;
-            let total = 0;
-            container.innerHTML = '';
-
-            cart.forEach((item, index) => {
-                total += item.price * item.quantity;
-                container.innerHTML += `
-                    <div class="pt-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-900">${item.name}</h4>
-                                <span class="text-xs text-gray-500">R$ ${item.price.toFixed(2)} x ${item.quantity}</span>
-                            </div>
-                        </div>
-                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-            });
-
-            totalElement.innerText = `R$ ${total.toFixed(2)}`;
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function openCheckout() {
-            alert('Aqui você conectará a sua API de Gateway de Pagamento (Stripe, Mercado Pago, etc.)!');
-        }
-    </script>
+      // Inicialização
+      updateDrawerUI();
+      renderProducts();
+    });
+  </script>
 </body>
 </html>
